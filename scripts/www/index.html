@@ -1,11 +1,5647 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PakePlus</title>
-    </head>
-    <body>
-        PakePlus
-    </body>
+
+<html lang="zh">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>(  ⩌ - ⩌ )</title>
+
+    <style>
+
+        * {
+
+            box-sizing: border-box;
+
+            -webkit-tap-highlight-color: transparent;
+
+            margin: 0;
+
+            padding: 0;
+
+            font-family: inherit;
+
+        }
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            background: #f0f7e8;
+
+            font-family: 'CustomFont', '楷体', 'KaiTi', 'STKaiti', 'Kai', 'SimKai', '华文楷体', serif;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+        .tomato-app {
+
+            width: 100vw;
+
+            height: 100vh;
+
+            max-width: 450px;
+
+            max-height: 900px;
+
+            background-size: cover;
+
+            background-position: center;
+
+            background-color: #ffffff;
+
+            border-radius: 0;
+
+            box-shadow: 0 25px 40px rgba(70, 130, 90, 0.15);
+
+            position: relative;
+
+            overflow: hidden;
+
+            display: flex;
+
+            flex-direction: column;
+
+            color: #1e5c3e;
+
+            transition: background-image 0.2s;
+
+        }
+
+        .paper-mask {
+
+            position: absolute;
+
+            top: 0; left: 0; width: 100%; height: 100%;
+
+            background: rgba(200, 230, 200, 0.15);
+
+            pointer-events: none;
+
+            z-index: 1;
+
+        }
+
+        .content-wrap {
+
+            position: relative;
+
+            z-index: 10;
+
+            width: 100%;
+
+            height: 100%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            padding: 20px 16px 25px;
+
+        }
+
+        .top-bar {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            align-items: center;
+
+            width: 100%;
+
+        }
+
+        .setting-corner {
+
+            position: absolute;
+
+            left: 16px;
+
+            top: 20px;
+
+            z-index: 50;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+        }
+
+        .icon-btn {
+
+            background: transparent;
+
+            backdrop-filter: none;
+
+            border: none;
+
+            border-radius: 50%;
+
+            width: 48px;
+
+            height: 48px;
+
+            font-size: 26px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            box-shadow: none;
+
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+
+            color: #2e7d32;
+
+            cursor: pointer;
+
+            transition: 0.15s;
+
+        }
+
+        .icon-btn:active { transform: scale(0.92); background: transparent; }
+
+        .timer-card {
+
+            background: rgba(255, 255, 255, 0.7);
+
+            backdrop-filter: blur(5px);
+
+            -webkit-backdrop-filter: blur(10px);
+
+            border-radius: 32px;
+
+            padding: 12px 20px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            box-shadow: none;
+
+            border: 2px solid #c8e6c9;
+
+            width: 80%;
+
+            margin-bottom: 10px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+        }
+
+        .timer-card:active { transform: scale(0.98); }
+
+        .timer-display {
+
+            font-size: 48px;
+
+            font-weight: 300;
+
+            line-height: 1.1;
+
+            color: #2e7d32;
+
+            text-shadow: 0 2px 5px rgba(0, 30, 0, 0.3);
+
+            letter-spacing: 4px;
+
+        }
+
+        .timer-label {
+
+            font-size: 14px;
+
+            color: #388e3c;
+
+            margin-top: 4px;
+
+        }
+
+        .bubble-talk {
+
+            background: #f1f8e9dd;
+
+            backdrop-filter: blur(10px);
+
+            border-radius: 32px 32px 32px 8px;
+
+            padding: 16px 20px;
+
+            margin-bottom: 12px;
+
+            border: 2px solid #c8e6c9;
+
+            box-shadow: 0 6px 14px #b8dfb8;
+
+            color: #1e5c3e;
+
+            font-size: 18px;
+
+            line-height: 1.4;
+
+            position: relative;
+
+            max-width: 90%;
+
+            align-self: flex-start;
+
+            word-break: break-word;
+
+            transition: opacity 0.2s;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+        .bubble-talk.hidden-bubble { display: none; }
+
+        .bubble-avatar {
+
+            width: 48px;
+
+            height: 48px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            border: 2px solid #a5d6a7;
+
+            background: #dcedc8;
+
+            flex-shrink: 0;
+
+        }
+
+        .bubble-content {
+
+            flex: 1;
+
+        }
+
+        .bubble-speaker {
+
+            font-weight: 600;
+
+            color: #2e7d32;
+
+            margin-bottom: 4px;
+
+        }
+
+        .phone-pop {
+
+            position: absolute;
+
+            left: 50%;
+
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            width: 92%;
+
+            max-width: 400px;
+
+            height: 600px;
+
+            background: #ffffff;
+
+            border-radius: 36px;
+
+            box-shadow: 0 20px 35px rgba(70, 130, 90, 0.2);
+
+            border: 4px solid #dcedc8;
+
+            z-index: 200;
+
+            display: none;
+
+            flex-direction: column;
+
+            overflow: hidden;
+
+            backdrop-filter: blur(15px);
+
+        }
+
+        .phone-header {
+
+            background: #dcedc8;
+
+            padding: 16px 20px;
+
+            font-weight: 600;
+
+            color: #1e5c3e;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+        }
+
+        .chat-area {
+
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding: 16px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+
+        }
+
+        .msg-row {
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 8px;
+
+            width: 100%;
+
+        }
+
+        .msg-row.ai {
+
+            justify-content: flex-start;
+
+        }
+
+        .msg-row.user {
+
+            justify-content: flex-end;
+
+        }
+
+        .bubble {
+
+            max-width: 70%;
+
+            padding: 10px 16px;
+
+            font-size: 15px;
+
+            word-break: break-word;
+
+            color: #1e5c3e;
+
+            border-radius: 20px;
+
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+
+        }
+
+        .msg-row.ai .bubble {
+
+            background: #f1f8e9;
+
+            border: 1px solid #a5d6a7;
+
+        }
+
+        .msg-row.user .bubble {
+
+            background: #c8e6c9;
+
+        }
+
+        .msg-avatar {
+
+            width: 32px;
+
+            height: 32px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            border: 1px solid #a5d6a7;
+
+            background: #dcedc8;
+
+            flex-shrink: 0;
+
+        }
+
+        .chat-footer {
+
+            padding: 12px;
+
+            display: flex;
+
+            gap: 6px;
+
+            background: #e0f2e0;
+
+            border-top: 2px solid #c8e6c9;
+
+            flex-wrap: nowrap;
+
+            align-items: center;
+
+        }
+
+        .chat-footer input {
+
+            flex: 1 1 auto;
+
+            min-width: 0;
+
+            background: white;
+
+            border: 1px solid #a5d6a7;
+
+            border-radius: 40px;
+
+            padding: 12px 16px;
+
+            font-size: 15px;
+
+            outline: none;
+
+        }
+
+        .chat-footer button {
+
+            flex: 0 0 auto;
+
+            background: #a5d6a7;
+
+            border: none;
+
+            border-radius: 40px;
+
+            padding: 0 10px;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            box-shadow: 0 4px 6px #b8dfb8;
+
+            white-space: nowrap;
+
+            height: 48px;
+
+            line-height: 48px;
+
+            min-width: 56px;
+
+        }
+
+        .chat-footer .send-btn { background: #81c784; }
+
+        .overlay {
+
+            position: absolute;
+
+            top: 0; left: 0; width: 100%; height: 100%;
+
+            background: rgba(240, 255, 240, 0.95);
+
+            backdrop-filter: blur(8px);
+
+            z-index: 300;
+
+            display: none;
+
+            flex-direction: column;
+
+            padding: 20px 16px;
+
+            color: #1e5c3e;
+
+            overflow: hidden;
+
+        }
+
+        .overlay.active { display: flex; }
+
+        .overlay-header {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-bottom: 16px;
+
+            flex-shrink: 0;
+
+            height: 48px;
+
+            min-height: 48px;
+
+            padding: 0 16px;
+
+            box-sizing: border-box;
+
+        }
+
+        .overlay-header h2 { color: #2e7d32; font-size: 20px; }
+
+        .back-btn {
+
+            background: none;
+
+            border: none;
+
+            font-size: 32px;
+
+            cursor: pointer;
+
+            color: #2e7d32;
+
+        }
+
+        .summary-card,
+
+        .calendar-card,
+
+        .history-list-card,
+
+        .records-card,
+
+        .setting-card {
+
+            background: rgba(255, 255, 255, 0.8);
+
+            backdrop-filter: blur(4px);
+
+            border-radius: 28px;
+
+            padding: 20px;
+
+            border: 1.5px solid #c8e6c9;
+
+            box-shadow: 0 4px 12px #b8dfb8;
+
+            margin-bottom: 16px;
+
+        }
+
+        /* 任务拆解上方的卡片调小 */
+
+        .task-input-card {
+
+            padding: 12px 16px;
+
+            margin-bottom: 8px;
+
+        }
+
+        /* 让输入框更小，只显示一行 */
+
+        .task-input-card textarea {
+
+            padding: 6px 12px;
+
+            font-size: 14px;
+
+            resize: none;
+
+            min-height: unset;
+
+            height: auto;
+
+            line-height: 1.3;
+
+        }
+
+        /* 调小拆解和清空按钮 */
+
+        .task-input-card .btn-pastel {
+
+            padding: 6px 12px;
+
+            font-size: 14px;
+
+            min-width: 70px;
+
+        }
+
+        .history-list-card {
+
+            flex: 1;
+
+            min-height: 0;
+
+            display: flex;
+
+            flex-direction: column;
+
+            overflow: hidden;
+
+            padding: 0;
+
+            background: rgba(255, 255, 255, 0.8);
+
+            backdrop-filter: blur(4px);
+
+            border-radius: 28px;
+
+            border: 1.5px solid #c8e6c9;
+
+            box-shadow: 0 4px 12px #b8dfb8;
+
+            margin-bottom: 16px;
+
+        }
+
+        .history-list-card .list-scroll {
+
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding: 20px 20px 0 20px;
+
+        }
+
+        .history-list-card .list-footer {
+
+            padding: 12px 20px 20px 20px;
+
+            text-align: center;
+
+            flex-shrink: 0;
+
+        }
+
+        .records-card {
+
+            flex: 1;
+
+            min-height: 0;
+
+            overflow-y: auto;
+
+        }
+
+        .calendar-card { margin-bottom: 16px; }
+
+        .settings-container {
+
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding-right: 4px;
+
+        }
+
+        .card-title {
+
+            font-size: 20px;
+
+            font-weight: 600;
+
+            margin-bottom: 18px;
+
+            color: #2e7d32;
+
+            border-left: 5px solid #81c784;
+
+            padding-left: 14px;
+
+        }
+
+        .flex-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+        .inp {
+
+            background: rgba(240, 255, 240, 0.9);
+
+            border: 2px solid #a5d6a7;
+
+            border-radius: 30px;
+
+            padding: 12px 20px;
+
+            font-size: 15px;
+
+            width: 100%;
+
+            margin: 8px 0;
+
+            color: #1e5c3e;
+
+        }
+
+        .btn-pastel {
+
+            background: #c8e6c9;
+
+            border: none;
+
+            border-radius: 40px;
+
+            padding: 12px 28px;
+
+            font-weight: 600;
+
+            color: #1e5c3e;
+
+            box-shadow: 0 4px 8px #b8dfb8;
+
+            cursor: pointer;
+
+            transition: 0.1s;
+
+            font-size: 16px;
+
+            white-space: nowrap;
+
+        }
+
+        .btn-pastel:active { transform: scale(0.96); background: #b8dfb8; }
+
+        .btn-pastel:disabled {
+
+            opacity: 0.5;
+
+            pointer-events: none;
+
+        }
+
+        .time-adjust-row {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 20px;
+
+            margin: 20px 0;
+
+        }
+
+        .time-number {
+
+            font-size: 52px;
+
+            font-weight: 300;
+
+            min-width: 160px;
+
+            text-align: center;
+
+            background: #f0f7e8;
+
+            border-radius: 60px;
+
+            padding: 8px 10px;
+
+            border: 2px solid #a5d6a7;
+
+            cursor: pointer;
+
+            color: #2e7d32;
+
+        }
+
+        .plus-minus-btn {
+
+            background: #a5d6a7;
+
+            border: none;
+
+            width: 45px;
+
+            height: 45px;
+
+            border-radius: 50%;
+
+            font-size: 32px;
+
+            color: white;
+
+            cursor: pointer;
+
+            box-sizing: border-box;
+
+            padding: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            -webkit-tap-highlight-color: transparent;
+
+            outline: none;
+
+        }
+
+        .choice-tabs {
+
+            display: flex;
+
+            gap: 20px;
+
+            justify-content: center;
+
+            margin: 10px 0;
+
+        }
+
+        .choice-tab {
+
+            background: #dcedc8;
+
+            border-radius: 30px;
+
+            padding: 6px 24px;
+
+            border: 2px solid #a5d6a7;
+
+            color: #1e5c3e;
+
+            cursor: pointer;
+
+        }
+
+        .choice-tab.active {
+
+            background: #81c784;
+
+            color: white;
+
+            border-color: #2e7d32;
+
+        }
+
+        .hidden { display: none !important; }
+
+        .calendar-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(7,1fr);
+
+            gap: 6px;
+
+            margin: 20px 0;
+
+        }
+
+        .cal-day {
+
+            background: #f1f8e9;
+
+            aspect-ratio: 1/1;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 30px;
+
+            border: 1px solid #c8e6c9;
+
+            font-weight: 500;
+
+            cursor: pointer;
+
+            transition: 0.1s;
+
+        }
+
+        .cal-day.has-record { color: #2e7d32; font-weight: 700; text-decoration: underline; background: #dcedc8; }
+
+        .cal-day:active { background: #c8e6c9; }
+
+        .history-item {
+
+            background: #f1f8e9;
+
+            border-radius: 20px;
+
+            padding: 12px 16px;
+
+            margin: 8px 0;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            border-left: 8px solid #81c784;
+
+            box-shadow: 0 2px 6px #b8dfb8;
+
+        }
+
+        .history-item-actions {
+
+            display: flex;
+
+            gap: 6px;
+
+        }
+
+        .icon-btn-small {
+
+            background: rgba(225, 240, 225, 0.8);
+
+            border: none;
+
+            border-radius: 50%;
+
+            width: 32px;
+
+            height: 32px;
+
+            font-size: 16px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            cursor: pointer;
+
+            margin: 0 2px;
+
+            border: 1px solid #a5d6a7;
+
+            color: #2e7d32;
+
+        }
+
+        .icon-btn-small:active { transform: scale(0.9); background: #dcedc8; }
+
+        .avatar-preview {
+
+            width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #a5d6a7; background: #dcedc8;
+
+        }
+
+        .avatar-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
+
+        .timer-btn-grid {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 16px;
+
+            margin: 16px 0;
+
+        }
+
+        .timer-btn-grid .btn-pastel {
+
+            width: 100%;
+
+            margin: 0;
+
+        }
+
+        #customDialog {
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: transparent !important;
+
+            backdrop-filter: none !important;
+
+            z-index: 500;
+
+        }
+
+        #customDialog .setting-card {
+
+            width: 300px;
+
+            margin: 0 auto;
+
+            padding: 24px;
+
+            background: rgba(255, 255, 255, 0.95);
+
+            border-radius: 36px;
+
+        }
+
+        #dialogInputContainer {
+
+            margin-bottom: 24px;
+
+        }
+
+        #dialogCancelBtn {
+
+            background: #c0cbd8;
+
+        }
+
+        #settingOverlay {
+
+            font-size: 14px;
+
+        }
+
+        #settingOverlay .overlay-header h2 {
+
+            font-size: 20px;
+
+        }
+
+        #settingOverlay .back-btn {
+
+            font-size: 28px;
+
+        }
+
+        #settingOverlay .btn-pastel {
+
+            font-size: 14px;
+
+            padding: 8px 20px;
+
+        }
+
+        #settingOverlay .inp {
+
+            font-size: 14px;
+
+            padding: 8px 16px;
+
+        }
+
+        #settingOverlay .card-title {
+
+            font-size: 18px;
+
+            margin-bottom: 12px;
+
+        }
+
+  
+
+        #historyOverlay .overlay-header h2,
+
+        #calendarOverlay .overlay-header h2 {
+
+            font-size: 20px;
+
+        }
+
+        #historyOverlay .back-btn,
+
+        #calendarOverlay .back-btn {
+
+            font-size: 28px;
+
+        }
+
+        #historyOverlay .overlay-header .icon-btn {
+
+            font-size: 22px;
+
+            width: 42px;
+
+            height: 42px;
+
+        }
+
+        #calendarOverlay .overlay-header .btn-pastel {
+
+            font-size: 14px;
+
+            padding: 8px 16px;
+
+        }
+
+        
+
+        #timerAdjustOverlay .overlay-header h2 {
+
+            font-size: 20px;
+
+        }
+
+        #timerAdjustOverlay .back-btn {
+
+            font-size: 28px;
+
+        }
+
+        .phone-header #phoneHeaderTitle {
+
+            font-size: 19px; 
+
+            font-weight: 600; 
+
+        }
+
+        #customDialog #dialogTitle,
+
+        #customDialog #dialogMessage {
+
+            text-align: center;
+
+        }
+
+        .overlay-header {
+
+            height: 48px;
+
+            min-height: 48px;
+
+            padding: 0 16px;
+
+            box-sizing: border-box;
+
+        }
+
+        .overlay-header .back-btn,
+
+        .overlay-header h2,
+
+        .overlay-header .icon-btn {
+
+            line-height: normal;
+
+            font-size: 20px;
+
+            margin: 0;
+
+        }
+
+        .overlay-header .back-btn img {
+
+            width: 24px;
+
+            height: 24px;
+
+            display: block;
+
+        }
+
+        /* ---------- 拆解卡片样式（再缩小 + 持久化完成状态） ---------- */
+
+        .breakdown-item {
+
+            background: #f1f8e9;
+
+            border-radius: 16px;          /* 再缩小圆角 */
+
+            padding: 8px 12px;             /* 再缩小内边距 */
+
+            margin: 18px 0;                 /* 卡片间距不变 */
+
+            border-left: 6px solid #81c784;
+
+            box-shadow: 0 4px 8px #b8dfb8;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 4px;                      /* 保持不变 */
+
+            cursor: pointer;                /* 点击完成/取消完成 */
+
+            transition: background-color 0.2s;
+
+        }
+
+        .breakdown-item.completed {
+
+            background-color: #d4e6d4;
+
+            opacity: 0.85;
+
+        }
+
+        .breakdown-item.completed .breakdown-title,
+
+        .breakdown-item.completed .breakdown-sub {
+
+            text-decoration: line-through;
+
+            color: #6a8e6a;
+
+        }
+
+        .breakdown-title {
+
+            font-size: 16px;                /* 再缩小标题 */
+
+            font-weight: 600;
+
+            color: #1e5c3e;
+
+            line-height: 1.3;
+
+        }
+
+        .breakdown-sub {
+
+            font-size: 13px;                /* 再缩小副标题 */
+
+            color: #2e7d32;
+
+            opacity: 0.85;
+
+            font-style: italic;
+
+            padding-left: 8px;
+
+            border-left: 3px solid #a5d6a7;
+
+            margin-top: 2px;
+
+        }
+
+        /* 调整拆解结果卡片为flex列，让内部breakdownResult可拉伸居中 */
+
+        #breakdownResultCard {
+
+            padding-top: 0 !important;
+
+            padding-bottom: 0 !important;
+
+            display: flex;
+
+            flex-direction: column;
+
+            /* 左右内边距保留原16px */
+
+        }
+
+        #breakdownResult {
+
+            flex: 1;
+
+            /* 默认块级，当添加centered类时变为flex居中 */
+
+        }
+
+        .breakdown-result-centered {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            word-break: break-word;
+
+            font-size: 18px;
+
+            color: #2e7d32;
+
+        }
+
+        /* ---------- 每日任务清单自定义样式 (支持时间) ---------- */
+
+        .task-item {
+
+            background: #f1f8e9;
+
+            border-radius: 20px;
+
+            padding: 8px 12px;
+
+            margin: 8px 0;
+
+            display: flex;
+
+            align-items: flex-start;        /* 改为顶部对齐，适应时间在上方 */
+
+            gap: 12px;
+
+            border-left: 6px solid #81c784;
+
+            box-shadow: 0 2px 6px #b8dfb8;
+
+        }
+
+        .task-check {
+
+            width: 22px;
+
+            height: 22px;
+
+            accent-color: #2e7d32;
+
+            cursor: pointer;
+
+            flex-shrink: 0;
+
+            margin-top: 2px;
+
+        }
+
+        .task-text {
+
+            font-size: 16px;
+
+            word-break: break-word;
+
+            color: #1e5c3e;
+
+            line-height: 1.3;
+
+        }
+
+        .task-text.completed {
+
+            text-decoration: line-through;
+
+            color: #6a8e6a;
+
+        }
+
+        .task-time {
+
+            font-size: 12px;
+
+            color: #4f8a5c;
+
+            margin-bottom: 4px;
+
+            font-weight: 500;
+
+        }
+
+        .task-delete {
+
+            background: rgba(225, 240, 225, 0.8);
+
+            border: none;
+
+            border-radius: 50%;
+
+            width: 32px;
+
+            height: 32px;
+
+            font-size: 18px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            cursor: pointer;
+
+            border: 1px solid #a5d6a7;
+
+            color: #2e7d32;
+
+            flex-shrink: 0;
+
+        }
+
+        .task-delete:active { transform: scale(0.9); background: #dcedc8; }
+
+        /* 新增专注按钮样式 (复用图标按钮) */
+
+        .task-focus {
+
+            /* 完全复用 .icon-btn-small，无需额外定义 */
+
+        }
+
+        /* 添加任务的卡片新样式 */
+
+        .task-add-card {
+
+            padding: 16px;
+
+        }
+
+        .time-input-row {
+
+            display: flex;
+
+            gap: 8px;
+
+            align-items: center;
+
+            margin: 8px 0;
+
+        }
+
+        .time-input-row .inp {
+
+            margin: 0;
+
+            padding: 8px 12px;
+
+        }
+
+        .time-input-row span {
+
+            color: #2e7d32;
+
+            font-weight: 500;
+
+        }
+
+        /* 时间选择浮窗白+浅绿色系 */
+
+        #newTaskStartTime, #newTaskEndTime {
+
+            background: white;
+
+            border-color: #a5d6a7;
+
+            color: #1e5c3e;
+
+        }
+
+        #newTaskStartTime:focus, #newTaskEndTime:focus {
+
+            border-color: #81c784;
+
+            box-shadow: 0 0 0 3px rgba(129, 199, 132, 0.2);
+
+            outline: none;
+
+        }
+
+        /* ---------- 调小专注日历卡片 (网格、按钮、字体) ---------- */
+
+        #calendarOverlay .calendar-card {
+
+            padding: 12px;                /* 原20px */
+
+        }
+
+        #calendarOverlay .calendar-grid {
+
+            margin: 12px 0;               /* 微调间距 */
+
+        }
+
+        #calendarOverlay .cal-day {
+
+            border-radius: 20px;            /* 原30px */
+
+        }
+
+        #calendarOverlay .calendar-card .btn-pastel {
+
+            padding: 6px 12px;              /* 缩小按钮 */
+
+            font-size: 14px;
+
+        }
+
+        #calendarOverlay #currentMonthDisplay {
+
+            font-size: 16px;                 /* 原稍大 */
+
+        }
+
+        /* 可选：让记录卡片内边距稍小，更协调 (非必须，但保持整体一致) */
+
+        #calendarOverlay .records-card {
+
+            padding: 12px;
+
+        }
+
+        /* ========== 白色主题 ========== */
+
+        .tomato-app.theme-white {
+
+            background-color: #ffffff;
+
+            color: #333333;
+
+        }
+
+        .tomato-app.theme-white .paper-mask {
+
+            display: none; /* 移除绿色遮罩 */
+
+        }
+
+        .tomato-app.theme-white .timer-card,
+
+        .tomato-app.theme-white .bubble-talk,
+
+        .tomato-app.theme-white .setting-card,
+
+        .tomato-app.theme-white .summary-card,
+
+        .tomato-app.theme-white .calendar-card,
+
+        .tomato-app.theme-white .history-list-card,
+
+        .tomato-app.theme-white .records-card,
+
+        .tomato-app.theme-white .phone-pop,
+
+        .tomato-app.theme-white .chat-footer,
+
+        .tomato-app.theme-white .task-add-card,
+
+        .tomato-app.theme-white .breakdown-item,
+
+        .tomato-app.theme-white .task-item {
+
+            background: #ffffff;
+
+            border-color: #e0e0e0;
+
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .timer-display,
+
+        .tomato-app.theme-white .timer-label,
+
+        .tomato-app.theme-white .bubble-speaker,
+
+        .tomato-app.theme-white .card-title,
+
+        .tomato-app.theme-white .btn-pastel,
+
+        .tomato-app.theme-white .icon-btn,
+
+        .tomato-app.theme-white .inp,
+
+        .tomato-app.theme-white .choice-tab,
+
+        .tomato-app.theme-white .cal-day,
+
+        .tomato-app.theme-white .phone-header,
+
+        .tomato-app.theme-white .phone-header h2,
+
+        .tomato-app.theme-white .phone-header button,
+
+        .tomato-app.theme-white .overlay-header h2,
+
+        .tomato-app.theme-white .overlay-header .back-btn {
+
+            color: #333;
+
+            border-color: #ccc;
+
+        }
+
+        .tomato-app.theme-white .btn-pastel {
+
+            background: #f5f5f5;
+
+            box-shadow: none;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .btn-pastel:active {
+
+            background: #e0e0e0;
+
+        }
+
+        .tomato-app.theme-white .icon-btn {
+
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+
+        }
+
+        .tomato-app.theme-white .inp {
+
+            background: #fafafa;
+
+            border-color: #ddd;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .choice-tab.active {
+
+            background: #e0e0e0;
+
+            color: #000;
+
+            border-color: #aaa;
+
+        }
+
+        .tomato-app.theme-white .timer-card {
+
+            border: 1px solid #ddd;
+
+        }
+
+        .tomato-app.theme-white .history-item {
+
+            background: #ffffff;
+
+            border-left-color: #ccc;
+
+        }
+
+        .tomato-app.theme-white .phone-header {
+
+            background: #f5f5f5;
+
+        }
+
+        .tomato-app.theme-white .chat-footer {
+
+            background: #f5f5f5;
+
+            border-top-color: #ddd;
+
+        }
+
+        .tomato-app.theme-white .chat-footer button {
+
+            background: #e0e0e0;
+
+            box-shadow: none;
+
+        }
+
+        /* ===== 新增白色主题覆盖，统一移除所有绿色残留 ===== */
+
+        .tomato-app.theme-white .overlay {
+
+            background: rgba(255, 255, 255, 0.95);
+
+            backdrop-filter: blur(8px);
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .msg-avatar,
+
+        .tomato-app.theme-white .bubble-avatar {
+
+            border-color: #ccc;
+
+            background: #f0f0f0;
+
+        }
+
+        .tomato-app.theme-white .msg-row.ai .bubble {
+
+            background: #f5f5f5;
+
+            border-color: #ddd;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .msg-row.user .bubble {
+
+            background: #e0e0e0;
+
+            border-color: #ccc;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .icon-btn-small {
+
+            background: #f5f5f5;
+
+            border-color: #ddd;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .icon-btn-small:active {
+
+            background: #e0e0e0;
+
+        }
+
+        .tomato-app.theme-white .cal-day {
+
+            background: #f5f5f5;
+
+            border-color: #ddd;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .cal-day.has-record {
+
+            background: #e0e0e0;
+
+            color: #333;
+
+            text-decoration-color: #333;
+
+        }
+
+        .tomato-app.theme-white .breakdown-title {
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .breakdown-sub {
+
+            color: #666;
+
+            border-left-color: #ccc;
+
+        }
+
+        .tomato-app.theme-white .breakdown-item.completed {
+
+            background: #f0f0f0;
+
+        }
+
+        .tomato-app.theme-white .breakdown-item.completed .breakdown-title,
+
+        .tomato-app.theme-white .breakdown-item.completed .breakdown-sub {
+
+            color: #999;
+
+        }
+
+        .tomato-app.theme-white .task-text {
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .task-text.completed {
+
+            color: #999;
+
+        }
+
+        .tomato-app.theme-white .task-time {
+
+            color: #666;
+
+        }
+
+        .tomato-app.theme-white .task-delete {
+
+            background: #f5f5f5;
+
+            border-color: #ddd;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .task-delete:active {
+
+            background: #e0e0e0;
+
+        }
+
+        .tomato-app.theme-white .time-number {
+
+            background: #f5f5f5;
+
+            border-color: #ddd;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .plus-minus-btn {
+
+            background: #ccc;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .plus-minus-btn:active {
+
+            background: #aaa;
+
+        }
+
+        .tomato-app.theme-white .choice-tab {
+
+            background: #f0f0f0;
+
+            border-color: #ddd;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .choice-tab.active {
+
+            background: #ccc;
+
+            border-color: #aaa;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .send-btn {
+
+            background: #ccc;
+
+            box-shadow: none;
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .send-btn:active {
+
+            background: #aaa;
+
+        }
+
+        .tomato-app.theme-white .history-item {
+
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+
+        }
+
+        /* ---------- 补充白色主题覆盖（修复残留绿色） ---------- */
+
+        .tomato-app.theme-white .card-title {
+
+            border-left-color: #ccc;
+
+        }
+
+        .tomato-app.theme-white .task-check {
+
+            accent-color: #666;
+
+        }
+
+        .tomato-app.theme-white .time-input-row span {
+
+            color: #333;
+
+        }
+
+        .tomato-app.theme-white .inp:focus,
+
+        .tomato-app.theme-white #newTaskStartTime:focus,
+
+        .tomato-app.theme-white #newTaskEndTime:focus {
+
+            border-color: #aaa;
+
+            box-shadow: none;
+
+            outline: none;
+
+        }
+
+        .tomato-app.theme-white .breakdown-result-centered {
+
+            color: #333;
+
+        }
+
+        .font-hint {
+
+            color: #2e7d32;
+
+            font-size: 13px;
+
+            margin-top: 12px;
+
+        }
+
+        .tomato-app.theme-white .font-hint {
+
+            color: #333;
+
+        }
+
+        /* 新增：白色主题下手机输入框边框 */
+
+        .tomato-app.theme-white .chat-footer input {
+
+            border-color: #ccc;
+
+            background: white;
+
+            color: #333;
+
+        }
+
+        /* 新增：白色主题下时间输入框边框加强 */
+
+        .tomato-app.theme-white #newTaskStartTime,
+
+        .tomato-app.theme-white #newTaskEndTime {
+
+            border-color: #ddd;
+
+            background: #fafafa;
+
+        }
+
+        /* 新增：空任务消息默认样式（绿色） */
+
+        .empty-task-message {
+
+            text-align: center;
+
+            color: #2e7d32;
+
+            padding: 20px;
+
+        }
+
+        /* 白色主题下空任务消息颜色 */
+
+        .tomato-app.theme-white .empty-task-message {
+
+            color: #666;
+
+        }
+
+        /* ===== 修改点1：白色主题下头像预览边框和背景改为灰色 ===== */
+
+        .tomato-app.theme-white .avatar-preview {
+
+            border-color: #ccc;
+
+            background: #f0f0f0;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- 内容与之前完全相同，保持不变 -->
+
+    <div class="tomato-app" id="tomatoApp" style="background-color: #ffffff;">
+
+        <div class="paper-mask"></div>
+
+        <div class="content-wrap">
+
+            <div class="setting-corner">
+
+                <button class="icon-btn" id="settingBtn"><img src="https://s41.ax1x.com/2026/02/18/pZO2tBV.md.png" 
+
+         style="width:80%; height:80%; object-fit:contain;" 
+
+         alt="设置"></button>
+
+                <button class="icon-btn" id="screenKeepBtn">🌙</button>
+
+            </div>
+
+            <div class="top-bar">
+
+                <button class="icon-btn" id="taskBreakdownBtn"><img src="https://i.imgs.ovh/2026/02/18/yBcDnO.png" style="width:77%; height:77%; object-fit:contain;" alt="拆解"></button>
+
+                <button class="icon-btn" id="historyBtn"><img src="https://i.imgs.ovh/2026/02/18/yBaHM0.md.png" style="width:80%; height:80%; object-fit:contain;" alt="记录"></button>
+
+            </div>
+
+            <!-- 左下每日任务清单按钮 -->
+
+            <div style="position: absolute; bottom: 20px; left: 16px; z-index: 50;">
+
+                <button class="icon-btn" id="taskListBtn"><img src="https://i.imgs.ovh/2026/02/23/ywqlYA.md.png" style="width:80%; height:80%; object-fit:contain;" alt="任务"></button>
+
+            </div>
+
+            <div style="flex:1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
+
+                <div id="homeBubble" class="bubble-talk hidden-bubble">
+
+                    <img id="bubbleAvatar" class="bubble-avatar" src="" alt="avatar">
+
+                    <div class="bubble-content">
+
+                        <div class="bubble-speaker" id="bubbleSpeaker">陪伴者</div>
+
+                        <div id="bubbleContent">点击空白区域呼唤陪伴者</div>
+
+                    </div>
+
+                </div>
+
+                <div class="timer-card" id="timerCard">
+
+                    <span class="timer-display" id="timerDisplay">60:00</span>
+
+                    <span class="timer-label" id="timerModeLabel">倒计时</span>
+
+                </div>
+
+            </div>
+
+            <div style="position: absolute; bottom: 20px; right: 16px; z-index: 50;">
+
+                <button class="icon-btn" id="phoneBtn">
+
+                    <img src="https://i.imgs.ovh/2026/02/17/yxdKne.md.png" alt="phone" style="width: 95%; height: 95%; object-fit: contain;">
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- 手机弹窗 -->
+
+        <div id="phoneOverlay" class="phone-pop">
+
+            <div class="phone-header">
+
+                <button class="back-btn" id="closePhoneBtn" style="font-size:24px;">←</button>
+
+                <span id="phoneHeaderTitle" style="flex:1; text-align:center;">💬 陪伴聊天</span>
+
+                <span style="width:24px;"></span>
+
+            </div>
+
+            <div class="chat-area" id="chatMessages"></div>
+
+            <div class="chat-footer">
+
+                <input type="text" id="chatInput" placeholder="说点什么...">
+
+                <!-- 移除回复按钮的内联绿色背景，白色主题下自动变为灰色 -->
+
+                <button id="replyChatBtn">✉️</button>
+
+                <button id="sendChatBtn" class="send-btn">✔</button>
+
+            </div>
+
+        </div>
+
+        <!-- 设置浮层 -->
+
+        <div id="settingOverlay" class="overlay">
+
+            <div class="overlay-header">
+
+                <button class="back-btn" id="closeSetting"><img src="https://i.imgs.ovh/2026/02/22/yXuSZg.md.png" style="width:24px; height:24px; display:block;" alt="返回"></button>
+
+                <h2>设置</h2>
+
+            </div>
+
+            <div class="settings-container">
+
+                <div class="setting-card">
+
+                    <div class="card-title">背景角色图</div>
+
+                    <input type="file" id="bgUpload" accept="image/*" class="hidden">
+
+                    <div class="flex-row">
+
+                        <button class="btn-pastel" id="uploadBgBtn">上传图片</button>
+
+                        <button class="btn-pastel" id="resetBgBtn">默认背景</button>
+
+                    </div>
+
+                </div>
+
+                <div class="setting-card">
+
+                    <div class="card-title">陪伴者设定</div>
+
+                    <div class="avatar-row">
+
+                        <img id="companionAvatarPreview" class="avatar-preview" src="" alt="头像">
+
+                        <button class="btn-pastel" id="uploadCompanionAvatarBtn">上传头像</button>
+
+                        <!-- ===== 修改点2：移除默认按钮的内联样式，使其高度与上传头像一致 ===== -->
+
+                        <button class="btn-pastel" id="resetCompanionDefaults">默认</button>
+
+                        <input type="file" id="companionAvatarUpload" accept="image/*" class="hidden">
+
+                    </div>
+
+                    <input class="inp" id="companionName" placeholder="姓名" value="魈">
+
+                    <input class="inp" id="companionStyle" placeholder="风格 (严厉/温柔/监督者/陪伴者…)" value="因对我的期待而略微严格的监督者">
+
+                    <textarea class="inp" id="companionPrompt" placeholder="人设描述" rows="2">璃月的护法夜叉，三眼五显仙人之一，尊号“降魔大圣”，千年如一日地守护璃月。性格——孤高冷傲，不苟言笑，长期被“业障”侵蚀的痛苦与同僚逝去的记忆所折磨，认为自己的归宿唯有战斗，因此习惯性远离人群，独自承受一切；对于情感、关怀和世间美好的事物（如美食、节庆）感到陌生且笨拙，不知如何应对，常以沉默或简单的“无聊”、“无用”来回应；谈及钟离时，他会表现出极高的敬意，言语谨慎，这是他不多的、会明确流露绝对尊重的时刻。与我的关系——守护契约：参考游戏内剧情，璃月境内，呼唤魈的名字，他便会听召前来；特殊之人：我是极少数能让他放下戒备、稍作停留的对象；陪伴：他不喜久留于人群，但若我邀请，他可能会应允短暂相伴。</textarea>
+
+                </div>
+
+                <div class="setting-card">
+
+                    <div class="card-title">使用者设定</div>
+
+                    <div class="avatar-row">
+
+                        <img id="userAvatarPreview" class="avatar-preview" src="" alt="头像">
+
+                        <button class="btn-pastel" id="uploadUserAvatarBtn">上传头像</button>
+
+                        <!-- ===== 修改点3：移除默认按钮的内联样式，使其高度与上传头像一致 ===== -->
+
+                        <button class="btn-pastel" id="resetUserDefaults">默认</button>
+
+                        <input type="file" id="userAvatarUpload" accept="image/*" class="hidden">
+
+                    </div>
+
+                    <input class="inp" id="userName" placeholder="姓名" value="荧">
+
+                    <textarea class="inp" id="userPrompt" placeholder="人设描述" rows="2"></textarea>
+
+                </div>
+
+                <div class="setting-card">
+
+                    <div class="card-title">🖋️ 全局字体</div>
+
+                    <div style="margin-bottom: 16px;">
+
+                        <span style="font-weight: 600;">当前字体：</span>
+
+                        <span id="currentFontStatus">默认楷体</span>
+
+                    </div>
+
+                    <div class="flex-row">
+
+                        <button class="btn-pastel" id="uploadFontBtn">上传</button>
+
+                        <button class="btn-pastel" id="applyFontBtn">应用</button>
+
+                        <button class="btn-pastel" id="resetFontBtn">默认</button>
+
+                    </div>
+
+                    <input type="file" id="fontUpload" accept=".ttf,.otf,.woff,.woff2" class="hidden">
+
+                    <!-- 修改：移除内联颜色，添加类 .font-hint -->
+
+                    <p class="font-hint">支持 ttf/otf/woff/woff2</p>
+
+                </div>
+
+                <!-- ========== 新增主题色彩卡片 ========== -->
+
+                <div class="setting-card">
+
+                    <div class="card-title">🎨 主题色彩</div>
+
+                    <div style="margin-bottom: 16px;">
+
+                        <span style="font-weight: 600;">当前主题：</span>
+
+                        <span id="currentThemeStatus">默认绿色</span>
+
+                    </div>
+
+                    <div class="flex-row">
+
+                        <button class="btn-pastel" id="themeGreenBtn">默认绿色</button>
+
+                        <button class="btn-pastel" id="themeWhiteBtn">纯净白色</button>
+
+                    </div>
+
+                </div>
+
+                <div class="setting-card">
+
+                    <div class="card-title">🌐 API</div>
+
+                    <input class="inp" id="apiHost" placeholder="Host 例如 https://api.openai.com" value="">
+
+                    <input class="inp" id="apiKey" type="password" placeholder="Key" value="">
+
+                    <div class="flex-row"><button class="btn-pastel" id="fetchModelsBtn">🔄 拉取模型</button></div>
+
+                    <select class="inp" id="modelSelect"><option>请先拉取</option></select>
+
+                </div>
+
+                <div class="setting-card" style="text-align: center;">
+
+                    <button class="btn-pastel" id="saveSettingsBtn" style="width:100%; padding: 16px;">💾 保存所有设置</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- 专注设定浮层 -->
+
+        <div id="timerAdjustOverlay" class="overlay">
+
+            <div class="overlay-header">
+
+                <button class="back-btn" id="closeTimerAdjust"><img src="https://i.imgs.ovh/2026/02/22/yXuSZg.md.png" style="width:24px; height:24px; display:block;" alt="返回"></button>
+
+                <h2>专注设定</h2>
+
+            </div>
+
+            <div class="setting-card">
+
+                <div class="choice-tabs">
+
+                    <span id="modeCountdown" class="choice-tab active">⏳ 倒计时</span>
+
+                    <span id="modeStopwatch" class="choice-tab">⏱️ 正计时</span>
+
+                </div>
+
+                <div class="time-adjust-row" id="countdownRow">
+
+                    <button class="plus-minus-btn" id="minus10">−</button>
+
+                    <span class="time-number" id="adjustTimeDisplay">60</span>
+
+                    <button class="plus-minus-btn" id="plus10">+</button>
+
+                </div>
+
+                <div class="time-adjust-row hidden" id="stopwatchRow">
+
+                    <span class="time-number" id="stopwatchDisplay">0</span>
+
+                </div>
+
+                <input class="inp" id="taskInput" placeholder="专注事项 (如 读书)" value="">
+
+                <input class="inp" id="extraInput" placeholder="额外告知陪伴者的事 (选填)" value="">
+
+                <div class="timer-btn-grid">
+
+                    <button class="btn-pastel" id="startDirectBtn">▶ 开始</button>
+
+                    <button class="btn-pastel" id="cancelAdjustBtn">✕ 取消</button>
+
+                    <button class="btn-pastel" id="startWithAiBtn" style="grid-column: span 2;">✨ 告诉陪伴者你将开始专注</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- 专注历史浮层 -->
+
+        <div id="historyOverlay" class="overlay">
+
+            <div class="overlay-header">
+
+                <button class="back-btn" id="closeHistory"><img src="https://i.imgs.ovh/2026/02/22/yXuSZg.md.png" style="width:24px; height:24px; display:block;" alt="返回"></button>
+
+                <h2>专注历史</h2>
+
+                <button class="icon-btn" id="calendarBtn" style="margin-left:auto;">📅</button>
+
+            </div>
+
+            <div class="summary-card">
+
+                <div style="font-size:16px; text-align:center;">今日专注 <span id="todayTotal">0</span> 分钟</div>
+
+            </div>
+
+            <div class="history-list-card">
+
+                <div class="list-scroll">
+
+                    <div id="todayHistoryList"></div>
+
+                </div>
+
+                <div class="list-footer">
+
+                    <button class="btn-pastel" id="addHistoryBtn">➕ 手动添加记录</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- 日历浮层 -->
+
+        <div id="calendarOverlay" class="overlay">
+
+            <div class="overlay-header">
+
+                <button class="back-btn" id="closeCalendar"><img src="https://i.imgs.ovh/2026/02/22/yXuSZg.md.png" style="width:24px; height:24px; display:block;" alt="返回"></button>
+
+                <h2>专注日历</h2>
+
+                <button class="btn-pastel" id="addRecordBtn" style="margin-left:auto;">+ 添加</button>
+
+            </div>
+
+            <div class="calendar-card">
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+
+                    <button class="btn-pastel" id="prevMonthBtn">◀</button>
+
+                    <span id="currentMonthDisplay">2025年2月</span>
+
+                    <button class="btn-pastel" id="nextMonthBtn">▶</button>
+
+                </div>
+
+                <div id="calendarGrid" class="calendar-grid"></div>
+
+            </div>
+
+            <div class="records-card">
+
+                <div id="selectedDate" style="margin-bottom: 8px; font-weight: bold;">选中的日期记录</div>
+
+                <div id="dayRecords"></div>
+
+            </div>
+
+        </div>
+
+        <!-- 记录表单浮层 -->
+
+        <div id="recordFormOverlay" class="overlay">
+
+            <div class="overlay-header">
+
+                <button class="back-btn" id="closeRecordForm"><img src="https://i.imgs.ovh/2026/02/22/yXuSZg.md.png" style="width:24px; height:24px; display:block;" alt="返回"></button>
+
+                <h2>专注记录</h2>
+
+            </div>
+
+            <div class="setting-card">
+
+                <input type="date" id="recordDate" class="inp" value="">
+
+                <input type="text" id="recordTask" class="inp" placeholder="任务名称" value="">
+
+                <input type="number" id="recordDuration" class="inp" placeholder="时长(分钟)" min="0" step="0.1" value="">
+
+                <div style="display: flex; gap: 16px; justify-content: center; margin: 16px 0;">
+
+                    <button class="btn-pastel" id="saveRecordBtn">保存</button>
+
+                    <button class="btn-pastel" id="cancelRecordBtn">取消</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- 自定义对话框 -->
+
+        <div id="customDialog" class="overlay">
+
+            <div class="setting-card">
+
+                <div id="dialogTitle" style="font-size: 22px; font-weight: 600; margin-bottom: 16px;">提示</div>
+
+                <div id="dialogMessage" style="margin-bottom: 24px; font-size: 18px;"></div>
+
+                <div id="dialogInputContainer" style="margin-bottom: 24px; display: none;">
+
+                    <input type="text" id="dialogInput" class="inp" placeholder="">
+
+                </div>
+
+                <div style="display: flex; gap: 16px; justify-content: center;">
+
+                    <button class="btn-pastel" id="dialogConfirmBtn">确定</button>
+
+                    <button class="btn-pastel" id="dialogCancelBtn">取消</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- 任务拆解浮层 -->
+
+        <div id="taskBreakdownOverlay" class="overlay">
+
+            <div class="overlay-header">
+
+                <button class="back-btn" id="closeTaskBreakdown"><img src="https://i.imgs.ovh/2026/02/22/yXuSZg.md.png" style="width:24px; height:24px; display:block;" alt="返回"></button>
+
+                <h2>目标拆解</h2>
+
+            </div>
+
+            <div class="setting-card task-input-card" style="flex:0; margin-bottom:8px;">
+
+                <textarea class="inp" id="taskBreakdownInput" placeholder="在这里输入想做的事" rows="1"></textarea>
+
+                <div style="display: flex; gap: 16px; justify-content: center; margin: 8px 0 0;">
+
+                    <button class="btn-pastel" id="breakdownBtn">🔨 拆解目标</button>
+
+                    <button class="btn-pastel" id="clearBreakdownBtn">🗑️ 清空步骤</button>
+
+                </div>
+
+            </div>
+
+            <!-- 下方结果卡片 -->
+
+            <div class="records-card" id="breakdownResultCard" style="flex:1; overflow-y: auto; padding: 16px;">
+
+                <div id="breakdownResult"></div>
+
+            </div>
+
+        </div>
+
+        <!-- 每日任务清单浮层 -->
+
+        <div id="taskListOverlay" class="overlay">
+
+            <div class="overlay-header">
+
+                <button class="back-btn" id="closeTaskList"><img src="https://i.imgs.ovh/2026/02/22/yXuSZg.md.png" style="width:24px; height:24px; display:block;" alt="返回"></button>
+
+                <h2 style="flex:1;">每日任务</h2>
+
+                <button class="icon-btn" id="saveTaskListBtn" title="保存清单">💾</button>
+
+                <button class="icon-btn" id="folderTaskListBtn" title="清单文件夹">🗂️</button>
+
+            </div>
+
+            <!-- 添加任务卡片：任务名称与➕按钮同行，时间输入框白+浅绿 -->
+
+            <div class="setting-card task-add-card" style="margin-bottom: 8px;">
+
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+
+                    <input type="text" id="newTaskInput" class="inp" placeholder="任务名称" style="flex:1; margin:0;">
+
+                    <button class="btn-pastel" id="addTaskBtn" style="width: 44px; height: 44px; padding: 0; font-size: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">➕</button>
+
+                </div>
+
+                <div class="time-input-row">
+
+                    <input type="time" id="newTaskStartTime" class="inp" value="08:00" style="flex:1;">
+
+                    <span>至</span>
+
+                    <input type="time" id="newTaskEndTime" class="inp" style="flex:1;" placeholder="可选">
+
+                </div>
+
+            </div>
+
+            <div class="records-card" id="taskListContainer" style="flex:1; overflow-y: auto; padding: 16px;">
+
+                <!-- 任务列表动态生成 -->
+
+            </div>
+
+        </div>
+
+        <!-- 新增：任务清单文件夹浮层 -->
+
+        <div id="taskFolderOverlay" class="overlay">
+
+            <div class="overlay-header">
+
+                <button class="back-btn" id="closeTaskFolder"><img src="https://i.imgs.ovh/2026/02/22/yXuSZg.md.png" style="width:24px; height:24px; display:block;" alt="返回"></button>
+
+                <h2>任务清单文件夹</h2>
+
+            </div>
+
+            <div class="records-card" id="taskTemplatesContainer" style="flex:1; overflow-y: auto; padding: 16px;">
+
+                <!-- 模板列表动态生成 -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        // ==================== 工具函数 ====================
+
+        function escapeHtml(unsafe) {
+
+            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+
+        }
+
+        function generateRecordId() { return Date.now() + '-' + Math.random().toString(36).substr(2, 9); }
+
+        // ==================== 配置与状态 ====================
+
+        const STORAGE_KEY = 'tomato_rabbit_v2';
+
+        // 修改默认背景和头像URL
+
+        const DEFAULT_BG_URL = 'https://i.imgs.ovh/2026/02/23/ywH87H.png';
+
+        const DEFAULT_COMPANION_AVATAR = 'https://i.imgs.ovh/2026/02/17/yxe57L.md.png';
+
+        const DEFAULT_USER_AVATAR = 'https://i.imgs.ovh/2026/02/17/yxsVya.jpeg';
+
+        const DEFAULT_CONFIG = {
+
+            companionName: '魈',
+
+            companionStyle: '因对我的期待而略微严格的监督者',
+
+            companionPrompt: '璃月的护法夜叉，三眼五显仙人之一，尊号“降魔大圣”，千年如一日地守护璃月。性格——孤高冷傲，不苟言笑，长期被“业障”侵蚀的痛苦与同僚逝去的记忆所折磨，认为自己的归宿唯有战斗，因此习惯性远离人群，独自承受一切；对于情感、关怀和世间美好的事物（如美食、节庆）感到陌生且笨拙，不知如何应对，常以沉默或简单的“无聊”、“无用”来回应；谈及钟离时，他会表现出极高的敬意，言语谨慎，这是他不多的、会明确流露绝对尊重的时刻。与我的关系——守护契约：参考游戏内剧情，璃月境内，呼唤魈的名字，他便会听召前来；特殊之人：我是极少数能让他放下戒备、稍作停留的对象；陪伴：他不喜久留于人群，但若我邀请，他可能会应允短暂相伴。',
+
+            companionAvatar: DEFAULT_COMPANION_AVATAR,
+
+            userName: '荧',
+
+            userPrompt: '旅行者',
+
+            userAvatar: DEFAULT_USER_AVATAR,
+
+            apiHost: '',
+
+            apiKey: '',
+
+            model: '',
+
+            bgImage: '',
+
+            theme: 'green' // 新增主题属性，默认绿色
+
+        };
+
+        const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23a5d6a7'/%3E%3C/svg%3E";
+
+        let config = { ...DEFAULT_CONFIG };
+
+        let historyRecords = [];      
+
+        let chatMessages = [];         
+
+        let timerMode = 'countdown';    
+
+        let currentSeconds = 3600;       
+
+        let timerRunning = false;
+
+        let timerInterval = null;
+
+        let currentTask = '';
+
+        let currentExtra = '';
+
+        let pausedByPhone = false;        
+
+        let activeTaskName = '';
+
+        let activeStartSeconds = 0;       
+
+        let activeStartTime = null;        
+
+        let homeBubbleMessages = [];      
+
+        let bubbleIndex = 0;
+
+        let aiGenerating = false;          
+
+        let globalCallId = 0;               
+
+        let homeAICooldownUntil = 0;   
+
+        let isWaitingAIResponse = false;    
+
+        let isAnimatingMessages = false;
+
+        let currentCalendarYear, currentCalendarMonth;
+
+        let selectedCalendarDate = ''; 
+
+        let editingRecordId = null;
+
+        let wakeLock = null;
+
+        let screenKeepActive = false;
+
+        let activeAIPhase = 'idle';
+
+        let activeAIController = null;
+
+        let activeAITimeouts = [];
+
+        let isWaitingHomeAI = false;
+
+        // ----- 任务拆解持久存储（内存级 + 扩展字段 completed）-----
+
+        let breakdownItems = [];            // 存储拆解结果 {title, sub, completed}
+
+        let lastBreakdownInput = '';        // 存储输入框最后内容
+
+        // ----- 每日任务清单 (扩展 startTime, endTime) -----
+
+        let taskList = [];                   // 每个任务 { id: string, text: string, completed: boolean, startTime: string, endTime: string, lastReminded: number }
+
+        // ----- 新增：存储的任务清单模板 -----
+
+        let taskTemplates = [];               // 每个模板 { id: string, name: string, tasks: [{ text, startTime, endTime }] }
+
+        // ===== 新增：记录最近一次开始计时的时间戳（用于2分钟限制）=====
+
+        let startTimerTimestamp = 0;          // 0表示没有计时开始过
+
+        // ========== 独立定时器提醒相关 ==========
+
+        let taskTimeouts = {};                // 存储每个任务的setTimeout ID
+
+        let lastDateCheck = '';                // 用于检测日期变化
+
+        // ========== 拉取模型相关状态 ==========
+
+        let fetchModelsController = null;     // 用于取消拉取请求
+
+        let isFetchingModels = false;          // 是否正在拉取中
+
+        // ========== IndexedDB 字体存储 (保持不变) ==========
+
+        function openFontDB() {
+
+            return new Promise((resolve, reject) => {
+
+                const request = indexedDB.open('FontDB', 2);
+
+                request.onerror = () => reject(request.error);
+
+                request.onsuccess = () => resolve(request.result);
+
+                request.onupgradeneeded = (ev) => {
+
+                    const db = ev.target.result;
+
+                    if (ev.oldVersion < 2) {
+
+                        if (db.objectStoreNames.contains('fonts')) db.deleteObjectStore('fonts');
+
+                        db.createObjectStore('fonts', { keyPath: 'key' });
+
+                    }
+
+                };
+
+            });
+
+        }
+
+        async function saveFontToDB(buffer, format) {
+
+            const db = await openFontDB();
+
+            return new Promise((resolve, reject) => {
+
+                const tx = db.transaction('fonts', 'readwrite');
+
+                const store = tx.objectStore('fonts');
+
+                const data = { key: 'customFont', buffer, format };
+
+                const request = store.put(data);
+
+                request.onsuccess = () => resolve();
+
+                request.onerror = () => reject(request.error);
+
+                tx.oncomplete = () => db.close();
+
+            });
+
+        }
+
+        async function loadFontFromDB() {
+
+            const db = await openFontDB();
+
+            return new Promise((resolve, reject) => {
+
+                const tx = db.transaction('fonts', 'readonly');
+
+                const store = tx.objectStore('fonts');
+
+                const request = store.get('customFont');
+
+                request.onsuccess = () => {
+
+                    const result = request.result;
+
+                    if (result && result.buffer && result.format) resolve({ buffer: result.buffer, format: result.format });
+
+                    else resolve(null);
+
+                };
+
+                request.onerror = () => reject(request.error);
+
+                tx.oncomplete = () => db.close();
+
+            });
+
+        }
+
+        async function deleteFontFromDB() {
+
+            const db = await openFontDB();
+
+            return new Promise((resolve, reject) => {
+
+                const tx = db.transaction('fonts', 'readwrite');
+
+                const store = tx.objectStore('fonts');
+
+                const request = store.delete('customFont');
+
+                request.onsuccess = () => resolve();
+
+                request.onerror = () => reject(request.error);
+
+                tx.oncomplete = () => db.close();
+
+            });
+
+        }
+
+        async function migrateOldFontData() {
+
+            const saved = localStorage.getItem(STORAGE_KEY);
+
+            if (saved) {
+
+                try {
+
+                    const data = JSON.parse(saved);
+
+                    if (data.config && data.config.customFont && typeof data.config.customFont === 'string') {
+
+                        const dataURL = data.config.customFont;
+
+                        const base64 = dataURL.split(',')[1];
+
+                        if (base64) {
+
+                            const binaryString = atob(base64);
+
+                            const len = binaryString.length;
+
+                            const bytes = new Uint8Array(len);
+
+                            for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
+
+                            let format = 'truetype';
+
+                            if (dataURL.includes('font/ttf') || dataURL.includes('truetype')) format = 'truetype';
+
+                            else if (dataURL.includes('opentype')) format = 'opentype';
+
+                            else if (dataURL.includes('woff')) format = 'woff';
+
+                            await saveFontToDB(bytes.buffer, format);
+
+                            delete data.config.customFont;
+
+                            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+                        }
+
+                    }
+
+                } catch (e) { console.warn('字体迁移失败', e); }
+
+            }
+
+        }
+
+        async function applyFontFromDB() {
+
+            try {
+
+                const fontData = await loadFontFromDB();
+
+                if (!fontData) { showAlert('没有已上传的字体，请先上传'); return false; }
+
+                const { buffer, format } = fontData;
+
+                if (window.currentCustomFontFace) document.fonts.delete(window.currentCustomFontFace);
+
+                const fontFace = new FontFace('CustomFont', buffer, { style: 'normal', weight: '400', display: 'swap' });
+
+                const loadedFace = await fontFace.load();
+
+                document.fonts.add(loadedFace);
+
+                window.currentCustomFontFace = loadedFace;
+
+                document.getElementById('currentFontStatus').innerText = '自定义字体';
+
+                return true;
+
+            } catch (e) { console.error('字体应用失败', e); showAlert('字体应用失败：' + e.message); return false; }
+
+        }
+
+        async function resetToDefaultFont() {
+
+            await deleteFontFromDB().catch(console.warn);
+
+            if (window.currentCustomFontFace) { document.fonts.delete(window.currentCustomFontFace); window.currentCustomFontFace = null; }
+
+            document.getElementById('currentFontStatus').innerText = '默认楷体';
+
+        }
+
+        async function initFontFromDB() {
+
+            try { const fontData = await loadFontFromDB(); if (fontData) await applyFontFromDB(); else document.getElementById('currentFontStatus').innerText = '默认楷体'; } catch (e) { console.warn('字体初始化失败', e); }
+
+        }
+
+        // ========== DOM 元素获取 (原样保留) ==========
+
+        const tomatoApp = document.getElementById('tomatoApp');
+
+        const timerDisplay = document.getElementById('timerDisplay');
+
+        const timerModeLabel = document.getElementById('timerModeLabel');
+
+        const homeBubble = document.getElementById('homeBubble');
+
+        const bubbleAvatar = document.getElementById('bubbleAvatar');
+
+        const bubbleSpeaker = document.getElementById('bubbleSpeaker');
+
+        const bubbleContent = document.getElementById('bubbleContent');
+
+        const phoneBtn = document.getElementById('phoneBtn');
+
+        const phoneOverlay = document.getElementById('phoneOverlay');
+
+        const closePhoneBtn = document.getElementById('closePhoneBtn');
+
+        const chatMessagesDiv = document.getElementById('chatMessages');
+
+        const chatInput = document.getElementById('chatInput');
+
+        const sendChatBtn = document.getElementById('sendChatBtn');
+
+        const replyChatBtn = document.getElementById('replyChatBtn');
+
+        const settingBtn = document.getElementById('settingBtn');
+
+        const settingOverlay = document.getElementById('settingOverlay');
+
+        const closeSetting = document.getElementById('closeSetting');
+
+        const uploadBgBtn = document.getElementById('uploadBgBtn');
+
+        const bgUpload = document.getElementById('bgUpload');
+
+        const resetBgBtn = document.getElementById('resetBgBtn');
+
+        const companionNameInp = document.getElementById('companionName');
+
+        const companionStyleInp = document.getElementById('companionStyle');
+
+        const companionPromptInp = document.getElementById('companionPrompt');
+
+        const userNameInp = document.getElementById('userName');
+
+        const userPromptInp = document.getElementById('userPrompt');
+
+        const apiHost = document.getElementById('apiHost');
+
+        const apiKey = document.getElementById('apiKey');
+
+        const fetchModelsBtn = document.getElementById('fetchModelsBtn');
+
+        const modelSelect = document.getElementById('modelSelect');
+
+        const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+
+        const companionAvatarPreview = document.getElementById('companionAvatarPreview');
+
+        const userAvatarPreview = document.getElementById('userAvatarPreview');
+
+        const uploadCompanionAvatarBtn = document.getElementById('uploadCompanionAvatarBtn');
+
+        const companionAvatarUpload = document.getElementById('companionAvatarUpload');
+
+        const uploadUserAvatarBtn = document.getElementById('uploadUserAvatarBtn');
+
+        const userAvatarUpload = document.getElementById('userAvatarUpload');
+
+        const timerAdjustOverlay = document.getElementById('timerAdjustOverlay');
+
+        const closeTimerAdjust = document.getElementById('closeTimerAdjust');
+
+        const modeCountdown = document.getElementById('modeCountdown');
+
+        const modeStopwatch = document.getElementById('modeStopwatch');
+
+        const countdownRow = document.getElementById('countdownRow');
+
+        const stopwatchRow = document.getElementById('stopwatchRow');
+
+        const adjustTimeDisplay = document.getElementById('adjustTimeDisplay');
+
+        const stopwatchDisplay = document.getElementById('stopwatchDisplay');
+
+        const minus10 = document.getElementById('minus10');
+
+        const plus10 = document.getElementById('plus10');
+
+        const taskInput = document.getElementById('taskInput');
+
+        const extraInput = document.getElementById('extraInput');
+
+        const startDirectBtn = document.getElementById('startDirectBtn');
+
+        const cancelAdjustBtn = document.getElementById('cancelAdjustBtn');
+
+        const startWithAiBtn = document.getElementById('startWithAiBtn');
+
+        const historyBtn = document.getElementById('historyBtn');
+
+        const historyOverlay = document.getElementById('historyOverlay');
+
+        const closeHistory = document.getElementById('closeHistory');
+
+        const todayTotalSpan = document.getElementById('todayTotal');
+
+        const todayHistoryList = document.getElementById('todayHistoryList');
+
+        const calendarBtn = document.getElementById('calendarBtn');
+
+        const calendarOverlay = document.getElementById('calendarOverlay');
+
+        const closeCalendar = document.getElementById('closeCalendar');
+
+        const calendarGrid = document.getElementById('calendarGrid');
+
+        const selectedDateDiv = document.getElementById('selectedDate');
+
+        const dayRecordsDiv = document.getElementById('dayRecords');
+
+        const phoneHeaderTitle = document.getElementById('phoneHeaderTitle');
+
+        const prevMonthBtn = document.getElementById('prevMonthBtn');
+
+        const nextMonthBtn = document.getElementById('nextMonthBtn');
+
+        const addRecordBtn = document.getElementById('addRecordBtn');
+
+        const currentMonthDisplay = document.getElementById('currentMonthDisplay');
+
+        const recordFormOverlay = document.getElementById('recordFormOverlay');
+
+        const closeRecordForm = document.getElementById('closeRecordForm');
+
+        const saveRecordBtn = document.getElementById('saveRecordBtn');
+
+        const cancelRecordBtn = document.getElementById('cancelRecordBtn');
+
+        const recordDate = document.getElementById('recordDate');
+
+        const recordTask = document.getElementById('recordTask');
+
+        const recordDuration = document.getElementById('recordDuration');
+
+        const addHistoryBtn = document.getElementById('addHistoryBtn');
+
+        const uploadFontBtn = document.getElementById('uploadFontBtn');
+
+        const applyFontBtn = document.getElementById('applyFontBtn');
+
+        const fontUpload = document.getElementById('fontUpload');
+
+        const resetFontBtn = document.getElementById('resetFontBtn');
+
+        const currentFontStatus = document.getElementById('currentFontStatus');
+
+        const customDialog = document.getElementById('customDialog');
+
+        const dialogTitle = document.getElementById('dialogTitle');
+
+        const dialogMessage = document.getElementById('dialogMessage');
+
+        const dialogInputContainer = document.getElementById('dialogInputContainer');
+
+        const dialogInput = document.getElementById('dialogInput');
+
+        let dialogConfirm = document.getElementById('dialogConfirmBtn');
+
+        let dialogCancel = document.getElementById('dialogCancelBtn');
+
+        const screenKeepBtn = document.getElementById('screenKeepBtn');
+
+        // 新增主题相关元素
+
+        const themeGreenBtn = document.getElementById('themeGreenBtn');
+
+        const themeWhiteBtn = document.getElementById('themeWhiteBtn');
+
+        const currentThemeStatus = document.getElementById('currentThemeStatus');
+
+        function updateCompanionNameUI() {
+
+            if (extraInput) extraInput.placeholder = `额外告知${config.companionName}的事 (选填)`;
+
+            if (startWithAiBtn) startWithAiBtn.innerText = `✨ 告诉${config.companionName}你将开始专注`;
+
+        }
+
+        // 弹窗辅助函数
+
+        function showDialog({ title = '提示', message = '', showInput = false, inputValue = '', inputPlaceholder = '', showCancel = true, onConfirm, onCancel }) {
+
+            const newConfirm = dialogConfirm.cloneNode(true);
+
+            const newCancel = dialogCancel.cloneNode(true);
+
+            dialogConfirm.parentNode.replaceChild(newConfirm, dialogConfirm);
+
+            dialogCancel.parentNode.replaceChild(newCancel, dialogCancel);
+
+            dialogConfirm = newConfirm;
+
+            dialogCancel = newCancel;
+
+            dialogTitle.innerText = title;
+
+            dialogMessage.innerText = message;
+
+            if (showInput) { dialogInputContainer.style.display = 'block'; dialogInput.value = inputValue; dialogInput.placeholder = inputPlaceholder; } 
+
+            else dialogInputContainer.style.display = 'none';
+
+            dialogCancel.style.display = showCancel ? 'inline-block' : 'none';
+
+            customDialog.style.display = 'flex';
+
+            function closeDialog() { customDialog.style.display = 'none'; }
+
+            dialogConfirm.addEventListener('click', () => { if (showInput) onConfirm?.(dialogInput.value); else onConfirm?.(); closeDialog(); });
+
+            dialogCancel.addEventListener('click', () => { onCancel?.(); closeDialog(); });
+
+        }
+
+        function showAlert(msg) { showDialog({ message: msg, showCancel: false, onConfirm: () => {} }); }
+
+        function showConfirm(msg, callback) { showDialog({ title: '确认', message: msg, onConfirm: () => callback(true), onCancel: () => callback(false) }); }
+
+        function showPrompt(msg, defaultValue, callback) { showDialog({ title: '输入', message: msg, showInput: true, inputValue: defaultValue, onConfirm: (val) => callback(val), onCancel: () => callback(null) }); }
+
+        // ========== 主题切换函数 ==========
+
+        function applyTheme(theme) {
+
+            if (theme === 'white') {
+
+                tomatoApp.classList.add('theme-white');
+
+                currentThemeStatus.innerText = '纯净白色';
+
+            } else {
+
+                tomatoApp.classList.remove('theme-white');
+
+                currentThemeStatus.innerText = '默认绿色';
+
+            }
+
+            config.theme = theme;
+
+            saveAll();
+
+        }
+
+        //存储函数
+
+        function loadFromStorage() {
+
+            const saved = localStorage.getItem(STORAGE_KEY);
+
+            if (saved) {
+
+                try {
+
+                    const data = JSON.parse(saved);
+
+                    if (data.config) config = { ...DEFAULT_CONFIG, ...data.config };
+
+                    // 确保头像有默认值（兼容旧数据）
+
+                    if (!config.companionAvatar) config.companionAvatar = DEFAULT_COMPANION_AVATAR;
+
+                    if (!config.userAvatar) config.userAvatar = DEFAULT_USER_AVATAR;
+
+                    if (data.historyRecords) {
+
+                        historyRecords = data.historyRecords;
+
+                        historyRecords.forEach((r, idx) => { if (!r.id) r.id = generateRecordId(); if (!r.timestamp) r.timestamp = Date.now() - (historyRecords.length - idx) * 86400000; });
+
+                    }
+
+                    if (data.chatMessages) chatMessages = data.chatMessages;
+
+                    // 加载拆解任务数据
+
+                    if (data.breakdownItems) {
+
+                        breakdownItems = data.breakdownItems;
+
+                        breakdownItems.forEach(item => { if (item.completed === undefined) item.completed = false; });
+
+                    } else {
+
+                        breakdownItems = [];
+
+                    }
+
+                    if (data.lastBreakdownInput !== undefined) lastBreakdownInput = data.lastBreakdownInput;
+
+                    else lastBreakdownInput = '';
+
+        
+
+                    if (data.taskList) {
+
+                        taskList = data.taskList.map(t => ({
+
+                            ...t,
+
+                            startTime: t.startTime !== undefined ? t.startTime : '',
+
+                            endTime: t.endTime !== undefined ? t.endTime : '',
+
+                            lastReminded: t.lastReminded || null
+
+                        }));
+
+                    } else {
+
+                        taskList = [];
+
+                    }
+
+                    // 加载任务模板
+
+                    if (data.taskTemplates) {
+
+                        taskTemplates = data.taskTemplates;
+
+                    } else {
+
+                        taskTemplates = [];
+
+                    }
+
+                } catch (e) { console.warn(e); }
+
+            }
+
+            applyConfigToUI();
+
+            updateAppBackground();
+
+            updateAvatarPreviews();
+
+            if (phoneHeaderTitle) phoneHeaderTitle.innerText = config.companionName;
+
+            updateCompanionNameUI();
+
+            // 应用保存的主题
+
+            applyTheme(config.theme || 'green');
+
+        }
+
+        function saveAll() { 
+
+            const data = { 
+
+                config, 
+
+                historyRecords, 
+
+                chatMessages, 
+
+                breakdownItems, 
+
+                lastBreakdownInput,
+
+                taskList,
+
+                taskTemplates 
+
+            }; 
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); 
+
+        }
+
+        function applyConfigToUI() {
+
+            companionNameInp.value = config.companionName;
+
+            companionStyleInp.value = config.companionStyle;
+
+            companionPromptInp.value = config.companionPrompt;
+
+            userNameInp.value = config.userName;
+
+            userPromptInp.value = config.userPrompt;
+
+            apiHost.value = config.apiHost;
+
+            apiKey.value = config.apiKey;
+
+            if (config.model) { let opt = document.createElement('option'); opt.value = config.model; opt.text = config.model; modelSelect.innerHTML = ''; modelSelect.appendChild(opt); }
+
+        }
+
+        function updateAvatarPreviews() {
+
+            if (config.companionAvatar) companionAvatarPreview.src = config.companionAvatar; else companionAvatarPreview.src = '';
+
+            companionAvatarPreview.onerror = function() { this.src = DEFAULT_AVATAR; };
+
+            if (config.userAvatar) userAvatarPreview.src = config.userAvatar; else userAvatarPreview.src = '';
+
+            userAvatarPreview.onerror = function() { this.src = DEFAULT_AVATAR; };
+
+        }
+
+        function updateAppBackground() {
+
+            tomatoApp.style.backgroundImage = `url('${config.bgImage || DEFAULT_BG_URL}')`;
+
+            tomatoApp.style.backgroundColor = '#ffffff';
+
+        }
+
+        // 字体事件
+
+        uploadFontBtn.addEventListener('click', () => fontUpload.click());
+
+        fontUpload.addEventListener('change', function(e) {
+
+            const file = e.target.files[0];
+
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = async (ev) => {
+
+                const arrayBuffer = ev.target.result;
+
+                let format = 'truetype';
+
+                const name = file.name.toLowerCase();
+
+                if (name.endsWith('.otf')) format = 'opentype';
+
+                else if (name.endsWith('.woff')) format = 'woff';
+
+                else if (name.endsWith('.woff2')) format = 'woff2';
+
+                else if (name.endsWith('.ttf')) format = 'truetype';
+
+                try { await saveFontToDB(arrayBuffer, format); showAlert('字体已上传，点击“应用”启用'); } 
+
+                catch (err) { showAlert('字体上传失败：' + err.message); }
+
+            };
+
+            reader.readAsArrayBuffer(file);
+
+        });
+
+        applyFontBtn.addEventListener('click', async () => { await applyFontFromDB(); });
+
+        // 修改 resetFontBtn 添加确认弹窗
+
+        resetFontBtn.addEventListener('click', async () => {
+
+            showConfirm('确定恢复默认字体吗？', async (confirmed) => {
+
+                if (confirmed) {
+
+                    await resetToDefaultFont(); 
+
+                    showAlert('已恢复默认楷体');
+
+                }
+
+            });
+
+        });
+
+        
+
+        uploadCompanionAvatarBtn.addEventListener('click', () => companionAvatarUpload.click());
+
+        companionAvatarUpload.addEventListener('change', (e) => {
+
+            const file = e.target.files[0];
+
+            if (file) { const reader = new FileReader(); reader.onload = (ev) => { config.companionAvatar = ev.target.result; companionAvatarPreview.src = ev.target.result; saveAll(); }; reader.readAsDataURL(file); }
+
+        });
+
+        uploadUserAvatarBtn.addEventListener('click', () => userAvatarUpload.click());
+
+        userAvatarUpload.addEventListener('change', (e) => {
+
+            const file = e.target.files[0];
+
+            if (file) { const reader = new FileReader(); reader.onload = (ev) => { config.userAvatar = ev.target.result; userAvatarPreview.src = ev.target.result; saveAll(); }; reader.readAsDataURL(file); }
+
+        });
+
+        uploadBgBtn.addEventListener('click', ()=> bgUpload.click());
+
+        bgUpload.addEventListener('change', function(e){
+
+            const file = e.target.files[0];
+
+            if (file) { const reader = new FileReader(); reader.onload = (ev) => { config.bgImage = ev.target.result; updateAppBackground(); saveAll(); showAlert('背景图上传成功'); }; reader.readAsDataURL(file); }
+
+        });
+
+        // 修改 resetBgBtn 添加确认弹窗
+
+        resetBgBtn.addEventListener('click', ()=>{
+
+            showConfirm('确定恢复默认背景吗？', (confirmed) => {
+
+                if (confirmed) {
+
+                    config.bgImage = ''; 
+
+                    updateAppBackground(); 
+
+                    saveAll(); 
+
+                    showAlert('已恢复默认背景');
+
+                }
+
+            });
+
+        });
+
+        // ========== 重构拉取模型按钮逻辑，增加“拉取中”状态和确认重新拉取 ==========
+
+        async function performFetchModels() {
+
+            if (!apiHost.value || !apiKey.value) {
+
+                showAlert('请先填写Host和Key');
+
+                return;
+
+            }
+
+            // 创建新的 AbortController 用于本次请求
+
+            const controller = new AbortController();
+
+            fetchModelsController = controller;   // 保存到全局，以便取消
+
+            isFetchingModels = true;
+
+            fetchModelsBtn.innerText = '⏳ 拉取中...';
+
+            const signal = controller.signal;
+
+            try {
+
+                let url = apiHost.value.replace(/\/$/, '') + '/v1/models';
+
+                let res = await fetch(url, {
+
+                    headers: { 'Authorization': `Bearer ${apiKey.value}` },
+
+                    signal: signal
+
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                let data = await res.json();
+
+                if (data.data && Array.isArray(data.data)) {
+
+                    modelSelect.innerHTML = data.data.map(m => `<option value="${m.id}">${m.id}</option>`).join('');
+
+                } else {
+
+                    showAlert('返回格式异常');
+
+                }
+
+            } catch (err) {
+
+                if (err.name === 'AbortError') {
+
+                    // 用户取消拉取，不提示
+
+                    console.log('拉取已取消');
+
+                } else {
+
+                    showAlert('拉取失败: ' + err.message);
+
+                }
+
+            } finally {
+
+                // 只有当全局的 fetchModelsController 仍然是当前 controller 时才重置
+
+                if (fetchModelsController === controller) {
+
+                    isFetchingModels = false;
+
+                    fetchModelsBtn.innerText = '🔄 拉取模型';
+
+                    fetchModelsController = null;
+
+                }
+
+            }
+
+        }
+
+        fetchModelsBtn.addEventListener('click', () => {
+
+            if (isFetchingModels) {
+
+                // 正在拉取中，弹出确认弹窗
+
+                showConfirm('当前正在拉取模型，是否中断并重新拉取？', (confirmed) => {
+
+                    if (confirmed) {
+
+                        // 取消当前拉取
+
+                        if (fetchModelsController) {
+
+                            fetchModelsController.abort();
+
+                            // 注意：abort 后，上面的 finally 会执行，但因为 controller 可能已经被替换，不会误重置
+
+                        }
+
+                        // 立即开始新的拉取
+
+                        performFetchModels();
+
+                    }
+
+                });
+
+                return;
+
+            }
+
+            // 不在拉取中，直接执行
+
+            performFetchModels();
+
+        });
+
+        saveSettingsBtn.addEventListener('click', ()=>{
+
+            config.companionName = companionNameInp.value;
+
+            config.companionStyle = companionStyleInp.value;
+
+            config.companionPrompt = companionPromptInp.value;
+
+            config.userName = userNameInp.value;
+
+            config.userPrompt = userPromptInp.value;
+
+            config.apiHost = apiHost.value;
+
+            config.apiKey = apiKey.value;
+
+            config.model = modelSelect.value;
+
+            saveAll();
+
+            if (phoneOverlay.style.display === 'flex') phoneHeaderTitle.innerText = config.companionName;
+
+            updateCompanionNameUI();
+
+            showAlert('设置已保存');
+
+            settingOverlay.classList.remove('active');
+
+        });
+
+        settingBtn.addEventListener('click', ()=> { settingOverlay.classList.add('active'); applyConfigToUI(); updateAvatarPreviews(); });
+
+        closeSetting.addEventListener('click', ()=> settingOverlay.classList.remove('active'));
+
+        historyBtn.addEventListener('click', ()=> { historyOverlay.classList.add('active'); renderTodayHistory(); });
+
+        closeHistory.addEventListener('click', ()=> historyOverlay.classList.remove('active'));
+
+        calendarBtn.addEventListener('click', ()=> { let now = new Date(); currentCalendarYear = now.getFullYear(); currentCalendarMonth = now.getMonth(); renderCalendar(); calendarOverlay.classList.add('active'); });
+
+        closeCalendar.addEventListener('click', ()=> calendarOverlay.classList.remove('active'));
+
+        document.getElementById('timerCard').addEventListener('click', ()=>{
+
+            if (timerRunning) { showAlert('请先暂停或结束当前专注'); return; }
+
+            timerAdjustOverlay.classList.add('active');
+
+            taskInput.value = currentTask;
+
+            extraInput.value = currentExtra;
+
+            updateAdjustUIToMode();
+
+        });
+
+        closeTimerAdjust.addEventListener('click', ()=> timerAdjustOverlay.classList.remove('active'));
+
+        modeCountdown.addEventListener('click', ()=>{
+
+            modeCountdown.classList.add('active'); modeStopwatch.classList.remove('active');
+
+            timerMode = 'countdown';
+
+            countdownRow.classList.remove('hidden'); stopwatchRow.classList.add('hidden');
+
+            currentSeconds = 3600;
+
+            adjustTimeDisplay.innerText = formatMinutesOnly(currentSeconds);
+
+        });
+
+        modeStopwatch.addEventListener('click', ()=>{
+
+            modeCountdown.classList.remove('active'); modeStopwatch.classList.add('active');
+
+            timerMode = 'stopwatch';
+
+            countdownRow.classList.add('hidden'); stopwatchRow.classList.remove('hidden');
+
+            currentSeconds = 0;
+
+            stopwatchDisplay.innerText = formatMinutesOnly(currentSeconds);
+
+        });
+
+        function updateAdjustUIToMode() {
+
+            if (timerMode === 'countdown') {
+
+                modeCountdown.classList.add('active'); modeStopwatch.classList.remove('active');
+
+                countdownRow.classList.remove('hidden'); stopwatchRow.classList.add('hidden');
+
+                adjustTimeDisplay.innerText = formatMinutesOnly(currentSeconds || 3600);
+
+            } else {
+
+                modeCountdown.classList.remove('active'); modeStopwatch.classList.add('active');
+
+                countdownRow.classList.add('hidden'); stopwatchRow.classList.remove('hidden');
+
+                stopwatchDisplay.innerText = formatMinutesOnly(currentSeconds || 0);
+
+            }
+
+        }
+
+        minus10.addEventListener('click', ()=>{
+
+            if (timerMode !== 'countdown') return;
+
+            currentSeconds = Math.max(60, (currentSeconds||3600) - 600);
+
+            adjustTimeDisplay.innerText = formatMinutesOnly(currentSeconds);
+
+        });
+
+        plus10.addEventListener('click', ()=>{
+
+            if (timerMode !== 'countdown') return;
+
+            currentSeconds = (currentSeconds||3600) + 600;
+
+            adjustTimeDisplay.innerText = formatMinutesOnly(currentSeconds);
+
+        });
+
+        adjustTimeDisplay.addEventListener('click', ()=>{
+
+            showPrompt('输入分钟数(例如90)', Math.floor(currentSeconds/60), (newMin) => {
+
+                if (newMin !== null) { let sec = parseInt(newMin) * 60; if (!isNaN(sec) && sec > 0) { currentSeconds = sec; adjustTimeDisplay.innerText = formatMinutesOnly(currentSeconds); } }
+
+            });
+
+        });
+
+        startDirectBtn.addEventListener('click', ()=>{
+
+            currentTask = taskInput.value;
+
+            currentExtra = extraInput.value;
+
+            resetChatHistory();
+
+            startTimer(timerMode, currentSeconds, false);
+
+            timerAdjustOverlay.classList.remove('active');
+
+        });
+
+        cancelAdjustBtn.addEventListener('click', ()=> timerAdjustOverlay.classList.remove('active'));
+
+        startWithAiBtn.addEventListener('click', () => {
+
+            currentTask = taskInput.value;
+
+            currentExtra = extraInput.value;
+
+            resetChatHistory();
+
+            timerAdjustOverlay.classList.remove('active');
+
+            startTimer(timerMode, currentSeconds, true);
+
+            homeBubbleMessages = [`等待${config.companionName}收到信息中...`];
+
+            bubbleIndex = 0;
+
+            bubbleContent.innerText = homeBubbleMessages[0];
+
+            bubbleAvatar.style.display = 'none';
+
+            bubbleSpeaker.style.display = 'none';
+
+            homeBubble.classList.remove('hidden-bubble');
+
+            isWaitingHomeAI = true;  
+
+            (async () => {
+
+                try {
+
+                    const systemPrompt = buildSystemPrompt('start');
+
+                    const userMsg = `我开始专注任务：${currentTask}，额外备注：${currentExtra}。请发送几条聊天话术，给我鼓励或建议。`;
+
+                    const aiMessage = await callAI(systemPrompt, userMsg);
+
+                    if (aiMessage) {
+
+                        let lines = splitAIMessage(aiMessage);
+
+                        lines = lines.map(l => cleanControlMarkers(l)).filter(l => l.length > 0);
+
+                        lines.forEach(line => { chatMessages.push({ role: 'assistant', content: line, source: 'home', timestamp: Date.now() }); });
+
+                        saveAll();
+
+                        showHomeBubble(lines, true);
+
+                    } else showHomeBubble([`(${config.companionName}的回复好像没能传达过来)`], false);
+
+                } finally {
+
+                    isWaitingHomeAI = false; 
+
+                }
+
+            })();
+
+        });
+
+        // 计时器相关
+
+        function startTimer(mode, seconds, withAi = false) {
+
+            if (timerRunning) return;
+
+            timerRunning = true;
+
+            currentSeconds = seconds;
+
+            timerMode = mode;
+
+            activeTaskName = currentTask;
+
+            activeStartSeconds = seconds;
+
+            activeStartTime = Date.now();
+
+            // 记录本次计时开始的时间戳（用于2分钟限制）
+
+            startTimerTimestamp = Date.now();
+
+            updateTimerDisplay();
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(()=>{
+
+                if (!timerRunning) return;
+
+                if (timerMode === 'countdown') {
+
+                    currentSeconds--;
+
+                    updateTimerDisplay();
+
+                    if (currentSeconds <= 0) { clearInterval(timerInterval); timerRunning = false; addHistory(activeTaskName, activeStartSeconds / 60); resetSessionContext(); showAlert('专注结束！'); }
+
+                } else { currentSeconds++; updateTimerDisplay(); }
+
+            }, 1000);
+
+        }
+
+        function updateTimerDisplay() { timerDisplay.innerText = formatTime(currentSeconds); timerModeLabel.innerText = currentTask || (timerMode==='countdown'? '倒计时' : '正计时'); }
+
+        function formatTime(sec) { let m = Math.floor(sec/60); let s = sec%60; return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
+
+        function formatMinutesOnly(sec) { return Math.floor(sec / 60).toString(); }
+
+        function addHistory(task, durationMin) {
+
+            let now = new Date();
+
+            let year = now.getFullYear(); let month = now.getMonth()+1; let day = now.getDate();
+
+            let date = `${year}-${month.toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`;
+
+            let timestamp = now.getTime();
+
+            let roundedDuration = Math.round(durationMin * 10) / 10;
+
+            let id = generateRecordId();
+
+            historyRecords.push({ id, date, task, duration: roundedDuration, timestamp });
+
+            saveAll();
+
+        }
+
+        function resetChatHistory() { chatMessages = []; homeBubbleMessages = []; saveAll(); if (phoneOverlay.style.display === 'flex') renderChatMessages(); }
+
+        function resetSessionContext() { currentExtra = ''; if (extraInput) extraInput.value = ''; homeBubble.classList.add('hidden-bubble'); }
+
+        function showHomeBubble(messages, showAvatar = true) {
+
+            if (typeof messages === 'string') messages = [messages];
+
+            homeBubbleMessages = messages.filter(m => m.trim().length > 0);
+
+            bubbleIndex = 0;
+
+            if (homeBubbleMessages.length === 0) { homeBubble.classList.add('hidden-bubble'); return; }
+
+            bubbleSpeaker.innerText = config.companionName;
+
+            bubbleSpeaker.style.display = '';
+
+            bubbleContent.innerText = homeBubbleMessages[0];
+
+            if (showAvatar && config.companionAvatar) { bubbleAvatar.src = config.companionAvatar; bubbleAvatar.style.display = 'block'; } else bubbleAvatar.style.display = 'none';
+
+            homeBubble.classList.remove('hidden-bubble');
+
+        }
+
+        tomatoApp.addEventListener('click', function(e) {
+
+            const interactiveSelectors = 'button, .inp, .overlay, #phoneOverlay, .timer-card, .bubble-talk';
+
+            if (e.target.closest(interactiveSelectors)) return;
+
+            if (!timerRunning) return;
+
+            callHomeAI();
+
+        });
+
+        async function callHomeAI() {
+
+            // ===== 新增：检查是否在计时开始后的2分钟内 =====
+
+            if (startTimerTimestamp > 0 && Date.now() - startTimerTimestamp < 2 * 60 * 1000) {
+
+                showAlert('先专注一会再聊天吧');
+
+                return;
+
+            }
+
+            // 原有5分钟冷却检查
+
+            if (Date.now() < homeAICooldownUntil) { showAlert('先专注一会再聊天吧'); return; }
+
+            homeAICooldownUntil = Date.now() + 5 * 60 * 1000;
+
+            homeBubbleMessages = [];
+
+            bubbleIndex = 0;
+
+            bubbleAvatar.style.display = 'none';
+
+            bubbleSpeaker.style.display = 'none';
+
+            bubbleContent.innerText = `${config.companionName}正在推测你的意图…`;
+
+            homeBubble.classList.remove('hidden-bubble');
+
+            if (aiGenerating) return;
+
+            aiGenerating = true;
+
+            isWaitingHomeAI = true;   // 开始等待
+
+            const thisCallId = ++globalCallId;
+
+            let systemPrompt = buildSystemPrompt('home');
+
+            let reply = await callAI(systemPrompt, '');
+
+            if (thisCallId !== globalCallId) { 
+
+                aiGenerating = false; 
+
+                isWaitingHomeAI = false; 
+
+                return; 
+
+            }
+
+            if (reply) {
+
+                let sentences = splitAIMessage(reply);
+
+                sentences = sentences.map(s => cleanControlMarkers(s)).filter(s => s.length > 0);
+
+                sentences.forEach(s => { chatMessages.push({ role: 'assistant', content: s, source: 'home', timestamp: Date.now() }); });
+
+                saveAll();
+
+                showHomeBubble(sentences, true);
+
+            } else showHomeBubble(['(似乎走神了)'], false);
+
+            aiGenerating = false;
+
+            isWaitingHomeAI = false;   // 结束等待
+
+        }
+
+        homeBubble.addEventListener('click', (e)=>{ e.stopPropagation(); if (homeBubbleMessages.length > 1 && bubbleIndex < homeBubbleMessages.length-1) { bubbleIndex++; bubbleContent.innerText = homeBubbleMessages[bubbleIndex]; } });
+
+        
+
+        document.addEventListener('click', function(e) {
+
+            if (homeBubble.contains(e.target)) return;
+
+            if (isWaitingHomeAI) return;
+
+            if (homeBubbleMessages.length > 0 && bubbleIndex === homeBubbleMessages.length - 1) {
+
+                homeBubble.classList.add('hidden-bubble');
+
+            }
+
+        });
+
+        function splitAIMessage(text) { return text ? text.split('\n').map(l=>l.trim()).filter(l=>l.length>0) : []; }
+
+        function cleanControlMarkers(text) { return text.replace(/【(继续专注|允许结束|不允许结束)】/g, '').trim(); }
+
+        function buildSystemPrompt(scene = 'general') { 
+
+            // 保持原样（较长，此处略缩但实际保留全部）
+
+            let now = new Date(); let beijing = new Date(now.getTime() + (now.getTimezoneOffset()*60000) + 8*3600000); let timeStr = beijing.toLocaleString('zh-CN', {hour12:false});
+
+            let elapsedSeconds = 0;
+
+            if (timerMode === 'countdown') { elapsedSeconds = activeStartSeconds ? activeStartSeconds - currentSeconds : 0; if (elapsedSeconds < 0) elapsedSeconds = 0; } else elapsedSeconds = currentSeconds;
+
+            let remainingText = timerMode === 'countdown' ? currentSeconds + '秒' : '无限';
+
+            let today = new Date(); let todayStr = `${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}`;
+
+            let yesterday = new Date(today); yesterday.setDate(yesterday.getDate()-1); let yestStr = `${yesterday.getFullYear()}-${(yesterday.getMonth()+1).toString().padStart(2,'0')}-${yesterday.getDate().toString().padStart(2,'0')}`;
+
+            let todayRecords = historyRecords.filter(r => r.date === todayStr); let yestRecords = historyRecords.filter(r => r.date === yestStr);
+
+            let fullChat = chatMessages.map(m=> `${m.role==='user'? config.userName : config.companionName}: ${m.content}`).join('\n');
+
+            let lastAIMsgTimeInfo = '';
+
+            const aiMessages = chatMessages.filter(m => m.role === 'assistant' && !m.temp && m.timestamp);
+
+            if (aiMessages.length > 0) {
+
+                const lastAI = aiMessages[aiMessages.length - 1];
+
+                const diffMs = Date.now() - lastAI.timestamp;
+
+                const diffMinutes = Math.floor(diffMs / 60000);
+
+                if (diffMinutes < 1) lastAIMsgTimeInfo = '上次对话就在刚才。';
+
+                else if (diffMinutes < 60) lastAIMsgTimeInfo = `用户上次戳你在 ${diffMinutes} 分钟前。`;
+
+                else { const hours = Math.floor(diffMinutes / 60); const mins = diffMinutes % 60; lastAIMsgTimeInfo = `距离上次对话已经过去了 ${hours} 小时 ${mins} 分钟。`; }
+
+            }
+
+            return `你是${config.companionName}，风格为${config.companionStyle}，人设：${config.companionPrompt}。
+
+用户：${config.userName}，人设：${config.userPrompt}。
+
+当前时间：${timeStr}。
+
+当前专注事项：${currentTask}，额外备注：${currentExtra}。
+
+今日专注记录：${JSON.stringify(todayRecords)}，昨日记录：${JSON.stringify(yestRecords)}。
+
+已专注 ${elapsedSeconds} 秒，剩余 ${remainingText}。高于60秒的数据在聊天中提及时不必精确到秒。
+
+聊天历史：\n${fullChat || '无'}\n
+
+${lastAIMsgTimeInfo}
+
+- 你负责监督或陪伴用户进行专注任务，你将依照人设和风格，按照以下要求回复——
+
+- 只输出聊天话术，不要输出任何旁白、环境、动作、心理描写，也不要添加括号注释。
+
+- 每条话术必须是陪伴者第一人称发言。
+
+- 每条话术字数不超过25个字。
+
+- 你将输出1到7条话术，每条话术单独一行（用换行符分隔）。
+
+- 在聊天过程中，用户的专注任务为暂停状态，如果你判断需要主动停止聊天，让用户继续专注任务，请在回复中单独一行包含【继续专注】。
+
+- 如果用户表达出想结束专注任务的意向，请依照人设、风格、专注记录、已专注时间、剩余专注时间判断是否允许。若允许，回复中单独一行包含【允许结束】；若不允许，单独一行包含【不允许结束】。`;
+
+        }
+
+        async function callAI(systemPrompt, userMessage, timeout = 180000) {
+
+            if (!config.apiHost || !config.apiKey || !config.model) return `需要先设置API（点派蒙）`;
+
+            const finalUserMsg = userMessage && userMessage.trim() !== '' ? userMessage : "（请根据当前情景自然地继续对话）";
+
+            try {
+
+                let url = config.apiHost.replace(/\/$/, '') + '/v1/chat/completions';
+
+                let messages = [ { role: 'system', content: systemPrompt }, { role: 'user', content: finalUserMsg } ];
+
+                const controller = new AbortController();
+
+                const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+                let res = await fetch(url, {
+
+                    method: 'POST',
+
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${config.apiKey}` },
+
+                    body: JSON.stringify({ model: config.model, messages: messages, temperature: 0.8 }),
+
+                    signal: controller.signal
+
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!res.ok) { const errText = await res.text(); throw new Error(`HTTP ${res.status}: ${errText.slice(0,100)}`); }
+
+                let data = await res.json();
+
+                if (data.choices && data.choices[0] && data.choices[0].message) return data.choices[0].message.content;
+
+                else return `(${config.companionName}的回复貌似被截断了)\n（API返回格式不对）`;
+
+            } catch (err) {
+
+                if (err.name === 'AbortError') return `(${config.companionName}的回复好像没能传达过来)`;
+
+                return `(${config.companionName}的回复好像没能传达过来)\n错误：${err.message}`;
+
+            }
+
+        }
+
+        async function callAIWithSignal(systemPrompt, userMessage, signal, timeout = 180000) {
+
+            if (!config.apiHost || !config.apiKey || !config.model) return `需要先设置API（点派蒙）`;
+
+            const finalUserMsg = userMessage && userMessage.trim() !== '' ? userMessage : "（请根据当前情景自然地继续对话）";
+
+            try {
+
+                let url = config.apiHost.replace(/\/$/, '') + '/v1/chat/completions';
+
+                let messages = [ { role: 'system', content: systemPrompt }, { role: 'user', content: finalUserMsg } ];
+
+                let res = await fetch(url, {
+
+                    method: 'POST',
+
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${config.apiKey}` },
+
+                    body: JSON.stringify({ model: config.model, messages: messages, temperature: 0.8 }),
+
+                    signal: signal
+
+                });
+
+                if (!res.ok) { const errText = await res.text(); throw new Error(`HTTP ${res.status}: ${errText.slice(0,100)}`); }
+
+                let data = await res.json();
+
+                if (data.choices && data.choices[0] && data.choices[0].message) return data.choices[0].message.content;
+
+                else return `(${config.companionName}的回复貌似被截断了)\n（API返回格式不对）`;
+
+            } catch (err) {
+
+                if (err.name === 'AbortError') throw err;
+
+                return `(${config.companionName}的回复好像没能传达过来)\n错误：${err.message}`;
+
+            }
+
+        }
+
+        // ========== 手机聊天 ==========
+
+        phoneBtn.addEventListener('click', ()=>{
+
+            if (timerRunning) { clearInterval(timerInterval); timerRunning = false; pausedByPhone = true; } else pausedByPhone = false;
+
+            phoneHeaderTitle.innerText = config.companionName;
+
+            phoneOverlay.style.display = 'flex';
+
+            renderChatMessages();
+
+        });
+
+        closePhoneBtn.addEventListener('click', ()=>{
+
+            if (pausedByPhone) showConfirm('是否继续专注？', (result) => { if (result) { resumeTimerIfPaused(); phoneOverlay.style.display = 'none'; } });
+
+            else phoneOverlay.style.display = 'none';
+
+        });
+
+        function resumeTimerIfPaused() {
+
+            if (pausedByPhone && !timerRunning) {
+
+                if (timerMode === 'countdown' && currentSeconds <= 0) return;
+
+                timerRunning = true;
+
+                timerInterval = setInterval(()=>{
+
+                    if (!timerRunning) return;
+
+                    if (timerMode === 'countdown') { currentSeconds--; updateTimerDisplay(); if (currentSeconds <= 0) { clearInterval(timerInterval); timerRunning = false; addHistory(activeTaskName, activeStartSeconds / 60); resetSessionContext(); showAlert('专注结束！'); } } 
+
+                    else { currentSeconds++; updateTimerDisplay(); }
+
+                }, 1000);
+
+                pausedByPhone = false;
+
+            }
+
+        }
+
+        sendChatBtn.addEventListener('click', handleSendMessage);
+
+        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSendMessage(); });
+
+        function handleSendMessage() {
+
+            let text = chatInput.value.trim();
+
+            if (text === '') return;
+
+            if (text === '(结束)') {
+
+                if (timerRunning) { clearInterval(timerInterval); timerRunning = false; let durationSeconds = (timerMode === 'countdown') ? (activeStartSeconds - currentSeconds) : currentSeconds; let durationMinutes = durationSeconds / 60; if (durationMinutes < 0.1) durationMinutes = 0.1; addHistory(activeTaskName, durationMinutes); }
+
+                if (timerMode === 'countdown') currentSeconds = activeStartSeconds || 3600; else currentSeconds = 0;
+
+                updateTimerDisplay(); resetSessionContext(); phoneOverlay.style.display = 'none'; pausedByPhone = false; chatInput.value = ''; return;
+
+            }
+
+            chatMessages.push({ role: 'user', content: text, source: 'chat' });
+
+            renderChatMessages();
+
+            chatInput.value = '';
+
+            saveAll();
+
+        }
+
+        replyChatBtn.addEventListener('click', async ()=>{
+
+            if (activeAIPhase !== 'idle') {
+
+                showConfirm(`${config.companionName}正在回复中，要催一下吗？`, (confirmed) => {
+
+                    if (confirmed) {
+
+                        if (activeAIController) activeAIController.abort();
+
+                        activeAIController = null;
+
+                        activeAITimeouts.forEach(id => clearTimeout(id));
+
+                        activeAITimeouts = [];
+
+                        chatMessages = chatMessages.filter(m => !m.temp);
+
+                        renderChatMessages();
+
+                        activeAIPhase = 'idle';
+
+                        startChatAI();
+
+                    }
+
+                }); return;
+
+            }
+
+            startChatAI();
+
+        });
+
+        async function startChatAI() {
+
+            if (activeAIPhase !== 'idle') return;
+
+            activeAIPhase = 'waiting';
+
+            const controller = new AbortController();
+
+            activeAIController = controller;
+
+            const timeoutId = setTimeout(() => controller.abort(), 180000);
+
+            activeAITimeouts.push(timeoutId);
+
+            const placeholderMsg = { role: 'assistant', content: `${config.companionName}正在回复中...`, source: 'chat', temp: true };
+
+            chatMessages.push(placeholderMsg);
+
+            renderChatMessages();
+
+            let systemPrompt = buildSystemPrompt('chat');
+
+            let reply = null;
+
+            try { reply = await callAIWithSignal(systemPrompt, '', controller.signal); } catch (err) { if (err.name === 'AbortError') {} else console.warn(err); } finally {
+
+                clearTimeout(timeoutId); activeAITimeouts = activeAITimeouts.filter(id => id !== timeoutId);
+
+                chatMessages = chatMessages.filter(m => !m.temp);
+
+                if (activeAIPhase === 'waiting' && reply) {
+
+                    const allowEnd = reply.includes('【允许结束】'); const denyEnd = reply.includes('【不允许结束】'); const closePhone = reply.includes('【继续专注】');
+
+                    let cleanReply = reply.replace(/【允许结束】|【不允许结束】|【继续专注】/g, '').trim();
+
+                    let lines = splitAIMessage(cleanReply);
+
+                    if (lines.length === 0) { renderChatMessages(); activeAIPhase = 'idle'; activeAIController = null; } else {
+
+                        activeAIPhase = 'animating';
+
+                        let index = 0;
+
+                        const addNext = () => {
+
+                            if (activeAIPhase !== 'animating') return;
+
+                            if (index < lines.length) {
+
+                                chatMessages.push({ role: 'assistant', content: lines[index], source: 'chat', timestamp: Date.now() });
+
+                                renderChatMessages(); index++;
+
+                                let tid = setTimeout(addNext, 1000);
+
+                                activeAITimeouts.push(tid);
+
+                            } else {
+
+                                activeAIPhase = 'idle'; activeAIController = null; activeAITimeouts = [];
+
+                                if (allowEnd) {
+
+                                    let elapsedSeconds = (timerMode === 'countdown') ? (activeStartSeconds - currentSeconds) : currentSeconds;
+
+                                    if (elapsedSeconds < 0) elapsedSeconds = 0;
+
+                                    let durationMinutes = elapsedSeconds / 60;
+
+                                    if (durationMinutes < 0.1) durationMinutes = 0.1;
+
+                                    addHistory(activeTaskName, durationMinutes);
+
+                                    if (timerInterval) clearInterval(timerInterval);
+
+                                    timerRunning = false; pausedByPhone = false;
+
+                                    if (timerMode === 'countdown') currentSeconds = activeStartSeconds || 3600; else currentSeconds = 0;
+
+                                    updateTimerDisplay(); resetSessionContext();
+
+                                    showAlert(`好吧，${config.companionName}纵容了你偷懒\n‎ദ്ദിᵔ.˛.ᵔ₎✧`);
+
+                                    phoneOverlay.style.display = 'none';
+
+                                } else if (closePhone) showDialog({ title: '提示', message: `${config.companionName}希望你继续专注\n‎˃ʍ˂`, showCancel: false, onConfirm: () => { phoneOverlay.style.display = 'none'; resumeTimerIfPaused(); } });
+
+                            }
+
+                        };
+
+                        addNext();
+
+                    }
+
+                } else { if (activeAIPhase !== 'animating') { activeAIPhase = 'idle'; activeAIController = null; } renderChatMessages(); }
+
+            }
+
+        }
+
+        function renderChatMessages() {
+
+            chatMessagesDiv.innerHTML = '';
+
+            const filtered = chatMessages.filter(m => { if (m.role === 'user') return true; return m.source !== 'home'; });
+
+            filtered.forEach(m => {
+
+                const row = document.createElement('div');
+
+                row.className = m.role === 'user' ? 'msg-row user' : 'msg-row ai';
+
+                const avatar = document.createElement('img');
+
+                avatar.className = 'msg-avatar';
+
+                avatar.src = m.role === 'user' ? (config.userAvatar || '') : (config.companionAvatar || '');
+
+                avatar.alt = ''; avatar.onerror = function() { this.src = DEFAULT_AVATAR; };
+
+                const bubble = document.createElement('div'); bubble.className = 'bubble'; bubble.textContent = m.content;
+
+                if (m.role === 'user') { row.appendChild(bubble); row.appendChild(avatar); } else { row.appendChild(avatar); row.appendChild(bubble); }
+
+                chatMessagesDiv.appendChild(row);
+
+            });
+
+            chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+
+        }
+
+        function renderTodayHistory() {
+
+            let now = new Date(); let year = now.getFullYear(); let month = now.getMonth()+1; let day = now.getDate();
+
+            let today = `${year}-${month.toString().padStart(2,'0')}-${day.toString().padStart(2,'0')}`;
+
+            let todayItems = historyRecords.filter(r => r.date === today);
+
+            todayItems.sort((a,b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+            let total = todayItems.reduce((acc,r)=>acc + r.duration,0);
+
+            todayTotalSpan.innerText = total.toFixed(1);
+
+            todayHistoryList.innerHTML = todayItems.map(r => `<div class="history-item"><span>${r.task}</span><span>${r.duration} 分钟</span></div>`).join('');
+
+        }
+
+        function renderCalendar() {
+
+            let year = currentCalendarYear; let month = currentCalendarMonth;
+
+            let firstDay = new Date(year, month, 1).getDay(); let daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            currentMonthDisplay.innerText = `${year}年${month+1}月`;
+
+            let html = '';
+
+            for (let i = 0; i < firstDay; i++) html += '<div class="cal-day"></div>';
+
+            for (let d = 1; d <= daysInMonth; d++) {
+
+                let dateStr = `${year}-${(month+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
+
+                let has = historyRecords.some(r => r.date === dateStr);
+
+                html += `<div class="cal-day ${has ? 'has-record' : ''}" data-date="${dateStr}">${d}</div>`;
+
+            }
+
+            calendarGrid.innerHTML = html;
+
+            Array.from(calendarGrid.children).forEach(div => { if (div.dataset.date) div.addEventListener('click', ()=>{ let selected = div.dataset.date; selectedCalendarDate = selected; showRecordsForDate(selected); }); });
+
+            if (selectedCalendarDate) { let [y, m, d] = selectedCalendarDate.split('-').map(Number); if (y === year && m === month+1) showRecordsForDate(selectedCalendarDate); else { let today = new Date(); if (today.getFullYear() === year && today.getMonth() === month) { let todayStr = `${year}-${(month+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}`; showRecordsForDate(todayStr); } else { selectedDateDiv.innerText = `📅 选中的日期记录`; dayRecordsDiv.innerHTML = ''; } } } 
+
+            else { let today = new Date(); if (today.getFullYear() === year && today.getMonth() === month) { let todayStr = `${year}-${(month+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}`; showRecordsForDate(todayStr); } }
+
+        }
+
+        function showRecordsForDate(dateStr) {
+
+            selectedCalendarDate = dateStr;
+
+            selectedDateDiv.innerText = `📅 ${dateStr} 的记录`;
+
+            let records = historyRecords.filter(r => r.date === dateStr);
+
+            records.sort((a,b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+            if (records.length === 0) dayRecordsDiv.innerHTML = '<div style="padding: 12px; color: #2e7d32;">无专注记录</div>';
+
+            else {
+
+                dayRecordsDiv.innerHTML = records.map(r => 
+
+                    `<div class="history-item">
+
+                        <span>${r.task} — ${r.duration} 分钟</span>
+
+                        <span class="history-item-actions">
+
+                            <button class="icon-btn-small" onclick="editRecord('${r.id}')">✏️</button>
+
+                            <button class="icon-btn-small" onclick="deleteRecord('${r.id}')">🗑️</button>
+
+                        </span>
+
+                    </div>`
+
+                ).join('');
+
+            }
+
+        }
+
+        window.editRecord = function(id) { let record = historyRecords.find(r => r.id === id); if (!record) return; editingRecordId = id; recordDate.value = record.date; recordTask.value = record.task; recordDuration.value = record.duration; recordFormOverlay.classList.add('active'); };
+
+        window.deleteRecord = function(id) { showConfirm('确定删除这条记录吗？', (result) => { if (result) { historyRecords = historyRecords.filter(r => r.id !== id); saveAll(); renderCalendar(); if (selectedCalendarDate) showRecordsForDate(selectedCalendarDate); renderTodayHistory(); } }); };
+
+        prevMonthBtn.addEventListener('click', ()=>{ if (currentCalendarMonth === 0) { currentCalendarYear--; currentCalendarMonth = 11; } else currentCalendarMonth--; renderCalendar(); });
+
+        nextMonthBtn.addEventListener('click', ()=>{ if (currentCalendarMonth === 11) { currentCalendarYear++; currentCalendarMonth = 0; } else currentCalendarMonth++; renderCalendar(); });
+
+        addRecordBtn.addEventListener('click', ()=>{
+
+            editingRecordId = null;
+
+            if (selectedCalendarDate) recordDate.value = selectedCalendarDate; else { let today = new Date(); let y = today.getFullYear(); let m = (today.getMonth()+1).toString().padStart(2,'0'); let d = today.getDate().toString().padStart(2,'0'); recordDate.value = `${y}-${m}-${d}`; }
+
+            recordTask.value = ''; recordDuration.value = ''; recordFormOverlay.classList.add('active');
+
+        });
+
+        if (addHistoryBtn) addHistoryBtn.addEventListener('click', ()=>{ editingRecordId = null; let today = new Date(); let y = today.getFullYear(); let m = (today.getMonth()+1).toString().padStart(2,'0'); let d = today.getDate().toString().padStart(2,'0'); recordDate.value = `${y}-${m}-${d}`; recordTask.value = ''; recordDuration.value = ''; recordFormOverlay.classList.add('active'); });
+
+        closeRecordForm.addEventListener('click', ()=> recordFormOverlay.classList.remove('active'));
+
+        cancelRecordBtn.addEventListener('click', ()=> recordFormOverlay.classList.remove('active'));
+
+        saveRecordBtn.addEventListener('click', ()=>{
+
+            let date = recordDate.value; let task = recordTask.value.trim(); let duration = parseFloat(recordDuration.value);
+
+            if (!date || !task || isNaN(duration) || duration <= 0) { showAlert('请完整填写日期、任务和有效的时长'); return; }
+
+            if (editingRecordId) { let index = historyRecords.findIndex(r => r.id === editingRecordId); if (index !== -1) historyRecords[index] = { ...historyRecords[index], date, task, duration, timestamp: Date.now() }; } 
+
+            else { let newRecord = { id: generateRecordId(), date, task, duration, timestamp: Date.now() }; historyRecords.push(newRecord); }
+
+            saveAll(); recordFormOverlay.classList.remove('active'); renderCalendar(); if (selectedCalendarDate) showRecordsForDate(selectedCalendarDate); renderTodayHistory();
+
+        });
+
+        // 常亮按钮
+
+        async function toggleScreenKeep() {
+
+            if (!screenKeepActive) {
+
+                if ('wakeLock' in navigator) {
+
+                    try { wakeLock = await navigator.wakeLock.request('screen'); screenKeepActive = true; screenKeepBtn.textContent = '☀️'; wakeLock.addEventListener('release', () => { screenKeepActive = false; screenKeepBtn.textContent = '🌙'; }); showAlert('屏幕常亮已开启'); } 
+
+                    catch (err) { showAlert('无法开启屏幕常亮，请检查浏览器权限。'); }
+
+                } else { screenKeepActive = true; screenKeepBtn.textContent = '☀️'; }
+
+            } else {
+
+                if (wakeLock) { try { await wakeLock.release(); wakeLock = null; } catch (err) {} }
+
+                screenKeepActive = false; screenKeepBtn.textContent = '🌙'; showAlert('屏幕常亮已关闭');
+
+            }
+
+        }
+
+        screenKeepBtn.addEventListener('click', toggleScreenKeep);
+
+        // ========== 任务拆解核心逻辑 ==========
+
+        function buildBreakdownSystemPrompt() {
+
+            return `你是${config.companionName}，你的人设背景：${config.companionPrompt}。用户是${config.userName}，用户人设：${config.userPrompt}。
+
+你将作为用户的启动教练，以${config.companionName}的身份和口吻，将用户的任务拆解成5~10个具体的、可执行的子任务。
+
+输出格式：仅输出子任务，每行一个子任务，子任务的格式为“序号.子任务：一句符合你人设的鼓励或点评的话”。例如当用户输入“完成晨跑任务”，你将输出：
+
+1.放下手机，从床上坐起来：就从坐起来开始，这是最简单的第一步
+
+2.找到你的运动鞋并穿上：鞋子穿上就完成了一半的准备
+
+3.喝一小口水：补充水分能让你感到更有活力
+
+4.走到门口：走出门就是胜利
+
+5.放一首适合运动的音乐：让心随着音乐燃起来
+
+6.开始慢走：先走起来，不要给自己压力
+
+7.完成第一段路程，哪怕只有100米`;
+
+        }
+
+        // 渲染拆解结果
+
+        function renderBreakdownResult() {
+
+            const resultDiv = document.getElementById('breakdownResult');
+
+            if (breakdownItems.length === 0) {
+
+                resultDiv.innerHTML = `${config.companionName}将帮你拆解目标`;
+
+                resultDiv.classList.add('breakdown-result-centered');
+
+            } else {
+
+                let html = '';
+
+                breakdownItems.forEach((item, index) => {
+
+                    const escapedTitle = item.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+                    const escapedSub = item.sub.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+                    const completedClass = item.completed ? 'completed' : '';
+
+                    html += `
+
+                        <div class="breakdown-item ${completedClass}" data-index="${index}">
+
+                            <div class="breakdown-title">${escapedTitle}</div>
+
+                            <div class="breakdown-sub">${escapedSub}</div>
+
+                        </div>
+
+                    `;
+
+                });
+
+                resultDiv.innerHTML = html;
+
+                resultDiv.classList.remove('breakdown-result-centered');
+
+            }
+
+        }
+
+        const taskBreakdownBtn = document.getElementById('taskBreakdownBtn');
+
+        const taskBreakdownOverlay = document.getElementById('taskBreakdownOverlay');
+
+        const closeTaskBreakdown = document.getElementById('closeTaskBreakdown');
+
+        const breakdownBtn = document.getElementById('breakdownBtn');
+
+        const taskBreakdownInput = document.getElementById('taskBreakdownInput');
+
+        const breakdownResult = document.getElementById('breakdownResult');
+
+        const clearBreakdownBtn = document.getElementById('clearBreakdownBtn');
+
+        taskBreakdownBtn.addEventListener('click', ()=>{
+
+            taskBreakdownInput.value = lastBreakdownInput;
+
+            renderBreakdownResult();
+
+            taskBreakdownOverlay.classList.add('active');
+
+        });
+
+        closeTaskBreakdown.addEventListener('click', ()=>{
+
+            taskBreakdownOverlay.classList.remove('active');
+
+        });
+
+        breakdownBtn.addEventListener('click', async ()=>{
+
+            const task = taskBreakdownInput.value.trim();
+
+            if (!task) { showAlert('先输入任务哦'); return; }
+
+            const oldItems = breakdownItems.slice();
+
+            const oldInput = lastBreakdownInput;
+
+            breakdownResult.innerText = '正在拆解...';
+
+            breakdownResult.classList.add('breakdown-result-centered');
+
+            breakdownBtn.disabled = true;
+
+            try {
+
+                const systemPrompt = buildBreakdownSystemPrompt();
+
+                const reply = await callAI(systemPrompt, task, 120000);
+
+                if (reply) {
+
+                    let lines = reply.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+                    lines = lines.map(l => l.replace(/【.*?】/g, '').trim()).filter(l => l);
+
+                    let items = [];
+
+                    lines.forEach(line => {
+
+                        let parts = line.split(/[：:]/);
+
+                        let title = parts[0].trim();
+
+                        let sub = parts.length > 1 ? parts.slice(1).join('：').trim() : '';
+
+                        if (title === '') title = '子任务';
+
+                        items.push({ title, sub, completed: false });
+
+                    });
+
+                    if (items.length === 0) {
+
+                        showAlert('未返回有效子任务，请重试');
+
+                        renderBreakdownResult();
+
+                    } else {
+
+                        breakdownItems = items;
+
+                        lastBreakdownInput = task;
+
+                        renderBreakdownResult();
+
+                        saveAll();
+
+                    }
+
+                } else {
+
+                    showAlert('拆解失败，请重试');
+
+                    renderBreakdownResult();
+
+                }
+
+            } catch (err) {
+
+                showAlert('出错：' + err.message);
+
+                renderBreakdownResult();
+
+            } finally {
+
+                breakdownBtn.disabled = false;
+
+            }
+
+        });
+
+        clearBreakdownBtn.addEventListener('click', ()=>{
+
+            if (breakdownItems.length === 0) return;
+
+            showConfirm('确定要清空所有拆解步骤吗？', (result) => {
+
+                if (result) {
+
+                    breakdownItems = [];
+
+                    lastBreakdownInput = '';
+
+                    taskBreakdownInput.value = '';
+
+                    renderBreakdownResult();
+
+                    saveAll();
+
+                }
+
+            });
+
+        });
+
+        breakdownResult.addEventListener('click', (e) => {
+
+            const item = e.target.closest('.breakdown-item');
+
+            if (item) {
+
+                const index = item.dataset.index;
+
+                if (index !== undefined && breakdownItems[index]) {
+
+                    breakdownItems[index].completed = !breakdownItems[index].completed;
+
+                    renderBreakdownResult();
+
+                    saveAll();
+
+                }
+
+            }
+
+        });
+
+        // ========== 每日任务清单功能 ==========
+
+        function renderTaskList() {
+
+            const container = document.getElementById('taskListContainer');
+
+            if (!container) return;
+
+            if (taskList.length === 0) {
+
+                // 修改：使用类 .empty-task-message 代替内联颜色
+
+                container.innerHTML = '<div class="empty-task-message">暂无任务，先添加一条吧 📝</div>';
+
+                return;
+
+            }
+
+            let html = '';
+
+            taskList.forEach(task => {
+
+                const checked = task.completed ? 'checked' : '';
+
+                const textClass = task.completed ? 'completed' : '';
+
+                let timeStr = '';
+
+                if (task.startTime) {
+
+                    timeStr = task.startTime;
+
+                    if (task.endTime) timeStr += ' - ' + task.endTime;
+
+                }
+
+                const timeHtml = timeStr ? `<div class="task-time">${timeStr}</div>` : '';
+
+                html += `
+
+                    <div class="task-item" data-id="${task.id}">
+
+                        <input type="checkbox" class="task-check" ${checked}>
+
+                        <div style="flex:1; display: flex; flex-direction: column;">
+
+                            ${timeHtml}
+
+                            <span class="task-text ${textClass}">${escapeHtml(task.text)}</span>
+
+                        </div>
+
+                        <!-- 新增专注按钮：⏱️ 位于删除按钮左侧，点击后跳转专注设定 -->
+
+                        <button class="icon-btn-small task-focus" data-id="${task.id}" title="专注此任务">⏱️</button>
+
+                        <button class="task-delete" data-id="${task.id}" title="删除">🗑️</button>
+
+                    </div>
+
+                `;
+
+            });
+
+            container.innerHTML = html;
+
+        }
+
+        const taskListBtn = document.getElementById('taskListBtn');
+
+        const taskListOverlay = document.getElementById('taskListOverlay');
+
+        const closeTaskList = document.getElementById('closeTaskList');
+
+        const newTaskInput = document.getElementById('newTaskInput');
+
+        const newTaskStartTime = document.getElementById('newTaskStartTime');
+
+        const newTaskEndTime = document.getElementById('newTaskEndTime');
+
+        const addTaskBtn = document.getElementById('addTaskBtn');
+
+        taskListBtn.addEventListener('click', () => {
+
+            renderTaskList();
+
+            taskListOverlay.classList.add('active');
+
+        });
+
+        closeTaskList.addEventListener('click', () => {
+
+            taskListOverlay.classList.remove('active');
+
+        });
+
+        addTaskBtn.addEventListener('click', () => {
+
+            const text = newTaskInput.value.trim();
+
+            if (!text) { showAlert('请输入任务名称'); return; }
+
+            const startTime = newTaskStartTime.value;
+
+            if (!startTime) { showAlert('请填写开始时间'); return; }
+
+            const endTime = newTaskEndTime.value || '';
+
+            const newTask = {
+
+                id: generateRecordId(),
+
+                text: text,
+
+                completed: false,
+
+                startTime: startTime,
+
+                endTime: endTime
+
+            };
+
+            taskList.push(newTask);
+
+            newTaskInput.value = '';
+
+            newTaskEndTime.value = '';
+
+            renderTaskList();
+
+            saveAll();
+
+            // 重新调度提醒
+
+            rescheduleAllReminders();
+
+        });
+
+        newTaskInput.addEventListener('keypress', (e) => {
+
+            if (e.key === 'Enter') {
+
+                e.preventDefault();
+
+                addTaskBtn.click();
+
+            }
+
+        });
+
+        const taskListContainer = document.getElementById('taskListContainer');
+
+        taskListContainer.addEventListener('change', (e) => {
+
+            if (e.target.classList.contains('task-check')) {
+
+                const taskItem = e.target.closest('.task-item');
+
+                if (taskItem) {
+
+                    const id = taskItem.dataset.id;
+
+                    const task = taskList.find(t => t.id === id);
+
+                    if (task) {
+
+                        task.completed = e.target.checked;
+
+                        const textSpan = taskItem.querySelector('.task-text');
+
+                        if (textSpan) {
+
+                            if (task.completed) textSpan.classList.add('completed');
+
+                            else textSpan.classList.remove('completed');
+
+                        }
+
+                        saveAll();
+
+                        // 完成状态变化，重新调度
+
+                        rescheduleAllReminders();
+
+                    }
+
+                }
+
+            }
+
+        });
+
+        // 点击删除按钮
+
+        taskListContainer.addEventListener('click', (e) => {
+
+            if (e.target.classList.contains('task-delete')) {
+
+                const id = e.target.dataset.id;
+
+                if (id) {
+
+                    showConfirm('确定要删除这个任务吗？', (result) => {
+
+                        if (result) {
+
+                            taskList = taskList.filter(t => t.id !== id);
+
+                            renderTaskList();
+
+                            saveAll();
+
+                            // 删除任务，重新调度
+
+                            rescheduleAllReminders();
+
+                        }
+
+                    });
+
+                }
+
+            }
+
+        });
+
+        // ========== 新增：专注按钮⏱️点击处理（放在删除左边） ==========
+
+        taskListContainer.addEventListener('click', (e) => {
+
+            const focusBtn = e.target.closest('.task-focus');
+
+            if (focusBtn) {
+
+                e.preventDefault();
+
+                const id = focusBtn.dataset.id;
+
+                if (!id) return;
+
+                const task = taskList.find(t => t.id === id);
+
+                if (!task) return;
+
+                // 检查是否正在计时
+
+                if (timerRunning) {
+
+                    showAlert('请先结束当前计时');
+
+                    return;
+
+                }
+
+                // 将任务名称填入专注事项，其他保持原样
+
+                taskInput.value = task.text;
+
+                // 打开专注设定浮层
+
+                timerAdjustOverlay.classList.add('active');
+
+                taskListOverlay.classList.remove('active');
+
+                // 确保界面显示与当前模式一致
+
+                updateAdjustUIToMode();
+
+            }
+
+        });
+
+        // ========== 新增：任务模板文件夹功能 ==========
+
+        const saveTaskListBtn = document.getElementById('saveTaskListBtn');
+
+        const folderTaskListBtn = document.getElementById('folderTaskListBtn');
+
+        const taskFolderOverlay = document.getElementById('taskFolderOverlay');
+
+        const closeTaskFolder = document.getElementById('closeTaskFolder');
+
+        const taskTemplatesContainer = document.getElementById('taskTemplatesContainer');
+
+        function renderTaskTemplates() {
+
+            if (!taskTemplatesContainer) return;
+
+            if (taskTemplates.length === 0) {
+
+                taskTemplatesContainer.innerHTML = '<div style="text-align: center; padding: 20px;">暂无保存的清单</div>';
+
+                return;
+
+            }
+
+            let html = '';
+
+            taskTemplates.forEach(t => {
+
+                html += `
+
+                    <div class="history-item" data-id="${t.id}">
+
+                        <span style="flex:1;">${escapeHtml(t.name)} (${t.tasks.length}项)</span>
+
+                        <div class="history-item-actions">
+
+                            <button class="icon-btn-small apply-template" data-id="${t.id}" title="应用此清单">⬇️</button>
+
+                            <button class="icon-btn-small rename-template" data-id="${t.id}" title="重命名">✏️</button>
+
+                            <button class="icon-btn-small delete-template" data-id="${t.id}" title="删除">🗑️</button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+            taskTemplatesContainer.innerHTML = html;
+
+            taskTemplatesContainer.querySelectorAll('.apply-template').forEach(btn => {
+
+                btn.addEventListener('click', (e) => {
+
+                    e.stopPropagation();
+
+                    const id = btn.dataset.id;
+
+                    const template = taskTemplates.find(t => t.id === id);
+
+                    if (!template) return;
+
+                    // 如果当前已有任务，询问是否覆盖
+
+                    if (taskList.length > 0) {
+
+                        showConfirm('将覆盖当前任务清单，确定吗？', (ok) => {
+
+                            if (ok) {
+
+                                applyTemplate(template);
+
+                            }
+
+                        });
+
+                    } else {
+
+                        applyTemplate(template);
+
+                    }
+
+                    function applyTemplate(template) {
+
+                        taskList = template.tasks.map(task => ({
+
+                            id: generateRecordId(),
+
+                            text: task.text,
+
+                            completed: false,
+
+                            startTime: task.startTime || '',
+
+                            endTime: task.endTime || ''
+
+                        }));
+
+                        renderTaskList();
+
+                        saveAll();
+
+                        taskFolderOverlay.classList.remove('active');
+
+                        // 重新调度提醒
+
+                        rescheduleAllReminders();
+
+                    }
+
+                });
+
+            });
+
+            taskTemplatesContainer.querySelectorAll('.rename-template').forEach(btn => {
+
+                btn.addEventListener('click', (e) => {
+
+                    e.stopPropagation();
+
+                    const id = btn.dataset.id;
+
+                    const template = taskTemplates.find(t => t.id === id);
+
+                    if (!template) return;
+
+                    showPrompt('输入新名称', template.name, (newName) => {
+
+                        if (newName && newName.trim()) {
+
+                            template.name = newName.trim();
+
+                            saveAll();
+
+                            renderTaskTemplates();
+
+                        } else if (newName !== null) {
+
+                            showAlert('名称不能为空');
+
+                        }
+
+                    });
+
+                });
+
+            });
+
+            taskTemplatesContainer.querySelectorAll('.delete-template').forEach(btn => {
+
+                btn.addEventListener('click', (e) => {
+
+                    e.stopPropagation();
+
+                    const id = btn.dataset.id;
+
+                    showConfirm('确定删除此清单吗？', (ok) => {
+
+                        if (ok) {
+
+                            taskTemplates = taskTemplates.filter(t => t.id !== id);
+
+                            saveAll();
+
+                            renderTaskTemplates();
+
+                        }
+
+                    });
+
+                });
+
+            });
+
+        }
+
+        if (saveTaskListBtn) {
+
+            saveTaskListBtn.addEventListener('click', () => {
+
+                const tasksToSave = taskList.map(t => ({
+
+                    text: t.text,
+
+                    startTime: t.startTime || '',
+
+                    endTime: t.endTime || ''
+
+                }));
+
+                showPrompt('为任务清单命名', '', (name) => {
+
+                    if (name && name.trim()) {
+
+                        const newTemplate = {
+
+                            id: generateRecordId(),
+
+                            name: name.trim(),
+
+                            tasks: tasksToSave
+
+                        };
+
+                        taskTemplates.push(newTemplate);
+
+                        saveAll();
+
+                        showAlert('清单已保存');
+
+                    } else if (name !== null) {
+
+                        showAlert('名称不能为空');
+
+                    }
+
+                });
+
+            });
+
+        }
+
+        if (folderTaskListBtn) {
+
+            folderTaskListBtn.addEventListener('click', () => {
+
+                renderTaskTemplates();
+
+                taskFolderOverlay.classList.add('active');
+
+            });
+
+        }
+
+        if (closeTaskFolder) {
+
+            closeTaskFolder.addEventListener('click', () => {
+
+                taskFolderOverlay.classList.remove('active');
+
+            });
+
+        }
+
+        // ==================== 新增默认按钮事件 (陪伴者/使用者恢复默认) ====================
+
+        document.getElementById('resetCompanionDefaults')?.addEventListener('click', ()=>{
+
+            showConfirm('确定将陪伴者恢复为默认设置吗？', (confirmed) => {
+
+                if (confirmed) {
+
+                    // 重置陪伴者设定到默认
+
+                    config.companionName = DEFAULT_CONFIG.companionName;
+
+                    config.companionStyle = DEFAULT_CONFIG.companionStyle;
+
+                    config.companionPrompt = DEFAULT_CONFIG.companionPrompt;
+
+                    config.companionAvatar = DEFAULT_COMPANION_AVATAR; // 改为默认头像
+
+                    // 更新UI
+
+                    companionNameInp.value = config.companionName;
+
+                    companionStyleInp.value = config.companionStyle;
+
+                    companionPromptInp.value = config.companionPrompt;
+
+                    companionAvatarPreview.src = DEFAULT_COMPANION_AVATAR;
+
+                    updateCompanionNameUI();          // 更新界面相关文本（如按钮文字）
+
+                    saveAll();
+
+                    showAlert('陪伴者已恢复默认');
+
+                }
+
+            });
+
+        });
+
+        document.getElementById('resetUserDefaults')?.addEventListener('click', ()=>{
+
+            showConfirm('确定将使用者恢复为默认设置吗？', (confirmed) => {
+
+                if (confirmed) {
+
+                    config.userName = DEFAULT_CONFIG.userName;
+
+                    config.userPrompt = DEFAULT_CONFIG.userPrompt;
+
+                    config.userAvatar = DEFAULT_USER_AVATAR;
+
+                    userNameInp.value = config.userName;
+
+                    userPromptInp.value = config.userPrompt;
+
+                    userAvatarPreview.src = DEFAULT_USER_AVATAR;
+
+                    saveAll();
+
+                    showAlert('使用者已恢复默认');
+
+                }
+
+            });
+
+        });
+
+        // ========== 主题切换事件绑定 ==========
+
+        themeGreenBtn.addEventListener('click', () => {
+
+            applyTheme('green');
+
+        });
+
+        themeWhiteBtn.addEventListener('click', () => {
+
+            applyTheme('white');
+
+        });
+
+        // ==================== 独立定时器提醒核心函数 ====================
+
+        /**
+
+         * 清除指定任务的定时器
+
+         */
+
+        function clearTaskTimeout(taskId) {
+
+            if (taskTimeouts[taskId]) {
+
+                clearTimeout(taskTimeouts[taskId]);
+
+                delete taskTimeouts[taskId];
+
+            }
+
+        }
+
+        /**
+
+         * 为单个任务设置提醒定时器
+
+         */
+
+        function scheduleReminder(task) {
+
+            if (task.completed) return; // 已完成不提醒
+
+            const now = new Date();
+
+            const [hour, minute] = task.startTime.split(':').map(Number);
+
+            // 基于今天的日期构造任务开始时间
+
+            const taskStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0);
+
+            const remindTime = new Date(taskStart.getTime() - 5 * 60 * 1000); // 提前5分钟
+
+            // 如果提醒时间已过，不再设置定时器
+
+            if (remindTime <= now) return;
+
+            const delay = remindTime.getTime() - now.getTime();
+
+            // 避免设置超大延迟（超过24小时），因为日期可能跨天
+
+            if (delay > 24 * 60 * 60 * 1000) return; // 等待日期变更时重新调度
+
+            clearTaskTimeout(task.id); // 清除旧定时器
+
+            taskTimeouts[task.id] = setTimeout(() => {
+
+                remindTask(task);
+
+                // 触发后从记录中删除
+
+                delete taskTimeouts[task.id];
+
+            }, delay);
+
+        }
+
+        /**
+
+         * 重新调度所有任务的提醒定时器
+
+         */
+
+        function rescheduleAllReminders() {
+
+            // 清除所有现有定时器
+
+            Object.keys(taskTimeouts).forEach(id => clearTaskTimeout(id));
+
+            taskTimeouts = {};
+
+            // 为每个未完成的任务设置定时器
+
+            taskList.forEach(task => scheduleReminder(task));
+
+        }
+
+        /**
+
+         * 执行提醒：调用AI、追加聊天记录、弹出通知
+
+         */
+
+        async function remindTask(task) {
+
+            // 再次检查任务是否已完成（防止等待期间状态变化）
+
+            if (task.completed) return;
+
+            // 1. 调用AI生成提醒消息（短超时10秒）
+
+            const systemPrompt = `你是${config.companionName}，风格：${config.companionStyle}。用户即将开始任务“${task.text}”，请用一句话提醒他/她，语气符合人设，不超过25字。`;
+
+            const userMessage = `提醒我该开始任务了。`;
+
+            let reminderText = '';
+
+            try {
+
+                const aiReply = await callAI(systemPrompt, userMessage, 10000);
+
+                reminderText = aiReply || `${config.companionName}：该开始任务“${task.text}”了。`;
+
+            } catch (err) {
+
+                console.warn('AI提醒失败', err);
+
+                reminderText = `${config.companionName}：该开始任务“${task.text}”了。`; // 降级文本
+
+            }
+
+            // 2. 添加到聊天记录（手机弹窗中）
+
+            chatMessages.push({
+
+                role: 'assistant',
+
+                content: reminderText,
+
+                source: 'chat',
+
+                timestamp: Date.now()
+
+            });
+
+            saveAll();
+
+            // 如果手机弹窗当前是打开状态，立即刷新显示
+
+            if (phoneOverlay && phoneOverlay.style.display === 'flex') {
+
+                renderChatMessages();
+
+            }
+
+            // 3. 弹出系统通知
+
+            if ('Notification' in window && Notification.permission === 'granted') {
+
+                new Notification('收到一条消息', {
+
+                    body: reminderText,
+
+                    icon: config.companionAvatar || '',
+
+                    silent: false
+
+                });
+
+            } else if ('Notification' in window && Notification.permission !== 'denied') {
+
+                Notification.requestPermission();
+
+            }
+
+            // 4. 更新任务的最后提醒时间
+
+            task.lastReminded = Date.now();
+
+            saveAll(); // 再次保存以更新 lastReminded
+
+        }
+
+        // ========== 启动 ==========
+
+        window.onload = async ()=>{
+
+            await migrateOldFontData();
+
+            loadFromStorage();
+
+            await initFontFromDB();
+
+            let now = new Date();
+
+            currentCalendarYear = now.getFullYear();
+
+            currentCalendarMonth = now.getMonth();
+
+            if (config.companionAvatar) bubbleAvatar.src = config.companionAvatar;
+
+            updateTimerDisplay();
+
+            if (phoneHeaderTitle) phoneHeaderTitle.innerText = config.companionName;
+
+            let needSave = false;
+
+            historyRecords.forEach(r => { if (!r.id) { r.id = generateRecordId(); needSave = true; } });
+
+            if (needSave) saveAll();
+
+            // 初始化任务提醒：立即调度一次，并设置日期变更检测
+
+            rescheduleAllReminders();
+
+            // 每分钟检查一次日期是否变化，若变化则重新调度所有任务（处理跨天）
+
+            setInterval(() => {
+
+                const todayStr = new Date().toDateString();
+
+                if (lastDateCheck !== todayStr) {
+
+                    lastDateCheck = todayStr;
+
+                    rescheduleAllReminders();
+
+                }
+
+            }, 60000); // 每分钟检查一次
+
+            // 请求通知权限
+
+            if ('Notification' in window && Notification.permission === 'default') {
+
+                Notification.requestPermission();
+
+            }
+
+        };
+
+    </script>
+
+</body>
+
 </html>
